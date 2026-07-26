@@ -27,7 +27,11 @@
           "\${workspaceFolder}"
         ];
         "python.terminal.activateEnvironment" = true;
+        "workbench.colorTheme" = "Catppuccin Latte";
       };
     };
   };
+
+  # Keep the Catppuccin extension theme instead of Stylix's generated theme.
+  stylix.targets.vscode.enable = false;
 }

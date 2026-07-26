@@ -14,4 +14,5 @@ Stylix est injecté depuis `common-modules.nix` et configuré dans `configuratio
 
 ## Cible explicitement désactivée
 
-- `stylix.targets.vscode.enable = false` dans `home-desktop.nix`.
+- `stylix.targets.vscode.enable = false` dans `hm/vscode.nix` pour les deux machines.
+- VS Code utilise le thème `Catppuccin Latte` fourni par l'extension Catppuccin.
