@@ -1,6 +1,8 @@
 { config, pkgs, pkgs-unstable, lib, inputs, ... }:
 
 let
+  openNow = pkgs.callPackage ./opennow.nix { };
+
   discordBase = pkgs-unstable.discord.override {
     withVencord = true;
   };
@@ -344,6 +346,7 @@ voice_index.write_text(text)
 
   # 2.21: Media Players & Streaming Tools
   pkgs2_21 = with pkgs; [
+    openNow # Open-source GeForce NOW desktop client
     mpv # Versatile media player
     yt-dlp # Command-line YouTube downloader
     pamixer # Command-line PulseAudio mixer utility
@@ -411,7 +414,10 @@ in
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-    # gamescopeSession.enable = true;
+    extraPackages = with pkgs; [
+      flatpak
+    ];
+    #   gamescopeSession.enable = true;
     #
   };
   programs.gamescope.enable = true;

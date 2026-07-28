@@ -97,6 +97,8 @@
   # Firewall configuration: use a loose reverse path check.
   networking.firewall.checkReversePath = "loose";
 
+  networking.networkmanager.wifi.powersave = false;
+
   # Enable wireless support (wpa_supplicant will be used).
   # networking.wireless.enable = true;
   # networking.wireless.userControlled.enable = true;
