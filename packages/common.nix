@@ -2,6 +2,7 @@
 
 let
   openNow = pkgs.callPackage ./opennow.nix { };
+  steaminputdbBuddy = pkgs.callPackage ./steaminputdb-buddy.nix { };
 
   discordBase = pkgs-unstable.discord.override {
     withVencord = true;
@@ -347,6 +348,7 @@ voice_index.write_text(text)
   # 2.21: Media Players & Streaming Tools
   pkgs2_21 = with pkgs; [
     openNow # Open-source GeForce NOW desktop client
+    steaminputdbBuddy # SteamInputDB.com Steam client integration (Buddy app)
     mpv # Versatile media player
     yt-dlp # Command-line YouTube downloader
     pamixer # Command-line PulseAudio mixer utility
