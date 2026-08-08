@@ -64,6 +64,7 @@
     ./hm/zsh.nix
     ./hm/neovim.nix
     ./hm/steaminputdb-buddy.nix
+    ./hm/fastfetch.nix
     ./wm-laptop/wm.nix
   ];
   services.syncthing.enable = true;
