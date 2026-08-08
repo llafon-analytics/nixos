@@ -58,6 +58,14 @@ in
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           # Firefox/Zen: 0 = dark, 1 = light, 2 = system, 3 = browser theme.
           "layout.css.prefers-color-scheme.content-override" = 1;
+          # 0 = never, 1 = always, 2 = auto (the built-in default). "auto"
+          # resolves to `IsRunningUnderFlatpakOrSnap() || GTK_USE_PORTAL`
+          # (gecko widget/gtk/WidgetUtilsGtk.cpp, ShouldUsePortal), so a native
+          # non-sandboxed build like this one never reaches the portal on its
+          # own. Forcing 1 opts Zen into the session's portal FileChooser; which
+          # backend answers is decided globally in modules/xdg-portal.nix, not
+          # here.
+          "widget.use-xdg-desktop-portal.file-picker" = 1;
         };
       };
     };

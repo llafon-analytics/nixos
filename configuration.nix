@@ -31,6 +31,7 @@
   imports =
     [
       ./packages/common.nix # Common package definitions
+      ./modules/xdg-portal.nix # XDG portal backend routing (KDE FileChooser)
       #  ./python.nix      # Python-specific configurations
     ];
 
@@ -270,11 +271,8 @@
   # Enable D-Bus for inter-process communication.
   services.dbus.enable = true;
 
-  # Enable XDG portals, adding the GTK portal for better GTK application compatibility.
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
+  # XDG portals (backends and per-interface routing) live in
+  # ./modules/xdg-portal.nix.
 
   ##############################
   # 13. Additional Service Configurations
