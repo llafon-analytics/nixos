@@ -286,7 +286,7 @@ let
         fi
 
         XDG_RUNTIME_DIR="$runtime_dir" HYPRLAND_INSTANCE_SIGNATURE="$signature" \
-          hyprctl --instance "$signature" eval 'hl.config({ animations = { enabled = false }, decoration = { rounding = 0, active_opacity = 1, inactive_opacity = 1, fullscreen_opacity = 1, blur = { enabled = false }, shadow = { enabled = false } }, debug = { disable_logs = true } })'
+          hyprctl --instance "$signature" eval 'hl.config({ animations = { enabled = false }, general = { border_size = 0 }, decoration = { rounding = 0, blur = { enabled = false }, shadow = { enabled = false } }, debug = { disable_logs = true } }); hl.window_rule({ match = { class = ".*" }, opacity = "1.0 override 1.0 override" })'
         log "lightweight Hyprland profile applied to $signature"
       }
 
