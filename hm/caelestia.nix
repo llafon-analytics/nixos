@@ -27,12 +27,61 @@ let
     mantle = "eff1f4"; crust = "e9ebef";
   };
 
+  # Independent of the named-colour fix above: the shipped light.txt also carries the
+  # Material 3 semantic roles (primary/secondary/tertiary + on*/*Container/*Fixed*)
+  # that actually drive Caelestia's accent (buttons, highlights, focus). Upstream
+  # derives these from a blue seed. Retint them to Catppuccin Latte pink (ea76cb) by
+  # running caelestia-cli's own generator (caelestia.utils.material.generator.gen_scheme,
+  # the same code path used for dynamic wallpaper-based schemes) with source colour
+  # ea76cb, mode=light, flavour=latte, variant=tonalspot (Caelestia's default).
+  catppuccinLattePinkAccent = {
+    primary_paletteKeyColor = "9b678a"; secondary_paletteKeyColor = "8a7080";
+    tertiary_paletteKeyColor = "846e99"; surfaceTint = "814f71";
+    primary = "814f71"; onPrimary = "fff7f9"; primaryContainer = "febfe7";
+    onPrimaryContainer = "663858"; inversePrimary = "febfe7";
+    secondary = "705867"; onSecondary = "fff7f9"; secondaryContainer = "fadaec";
+    onSecondaryContainer = "624b59";
+    tertiary = "6b5780"; onTertiary = "fff6ff"; tertiaryContainer = "e1c8f8";
+    onTertiaryContainer = "533f66";
+    primaryFixed = "febfe7"; primaryFixedDim = "efb2d9";
+    onPrimaryFixed = "502544"; onPrimaryFixedVariant = "704162";
+    secondaryFixed = "fadaec"; secondaryFixedDim = "ebccdd";
+    onSecondaryFixed = "4f3947"; onSecondaryFixedVariant = "6d5463";
+    tertiaryFixed = "e1c8f8"; tertiaryFixedDim = "d3bae9";
+    onTertiaryFixed = "3f2c52"; onTertiaryFixedVariant = "5c4870";
+  };
+  # As shipped upstream (light.txt), keyed by the wrong blue-derived value being replaced.
+  shippedLatteAccentValues = {
+    primary_paletteKeyColor = "417da2"; secondary_paletteKeyColor = "657a8a";
+    tertiary_paletteKeyColor = "92689d"; surfaceTint = "236488";
+    primary = "3e7b9f"; onPrimary = "ffffff"; primaryContainer = "417da2";
+    onPrimaryContainer = "00060c"; inversePrimary = "93cdf6";
+    secondary = "4c6170"; onSecondary = "ffffff"; secondaryContainer = "cfe5f8";
+    onSecondaryContainer = "526776";
+    tertiary = "8f659a"; onTertiary = "ffffff"; tertiaryContainer = "8f659a";
+    onTertiaryContainer = "ffffff";
+    primaryFixed = "c7e7ff"; primaryFixedDim = "93cdf6";
+    onPrimaryFixed = "001e2e"; onPrimaryFixedVariant = "004c6d";
+    secondaryFixed = "cfe5f8"; secondaryFixedDim = "b4c9db";
+    onSecondaryFixed = "071e2b"; onSecondaryFixedVariant = "354958";
+    tertiaryFixed = "fad7ff"; tertiaryFixedDim = "e6b6f1";
+    onTertiaryFixed = "2e0a3b"; onTertiaryFixedVariant = "5e3869";
+  };
+
   patchedCaelestiaCli =
     inputs.caelestia-shell.inputs.caelestia-cli.packages.${system}.default.overrideAttrs (old: {
-      postPatch = (old.postPatch or "") + lib.concatStrings (lib.mapAttrsToList (name: correct: ''
+      # Upstream sets `patchPhase` itself (a full phase override, not `patches`/`postPatch`),
+      # so genericBuild evals that string directly and never sources `postPatch` — appending
+      # there is a silent no-op. Append to `patchPhase` instead so our substitutions actually
+      # run. (Verified by building and inspecting the output wheel: without this, none of the
+      # substituteInPlace calls below land in the built package.)
+      patchPhase = old.patchPhase + lib.concatStrings (lib.mapAttrsToList (name: correct: ''
         substituteInPlace src/caelestia/data/schemes/catppuccin/latte/light.txt \
           --replace-fail "${name} ${shippedLatteValues.${name}}" "${name} ${correct}"
-      '') catppuccinLattePalette);
+      '') catppuccinLattePalette) + lib.concatStrings (lib.mapAttrsToList (name: correct: ''
+        substituteInPlace src/caelestia/data/schemes/catppuccin/latte/light.txt \
+          --replace-fail "${name} ${shippedLatteAccentValues.${name}}" "${name} ${correct}"
+      '') catppuccinLattePinkAccent);
     });
 in
 {
@@ -80,7 +129,15 @@ in
   # The scheme is runtime state (~/.local/state/caelestia/scheme.json) whose colour
   # values are computed by the CLI, so we re-apply it rather than writing it by hand.
   # Latte only ships a light mode. A failure here must not break nixos-rebuild.
+  #
+  # `caelestia scheme set` is a no-op if name/flavour/mode already match the current
+  # state file (each setter early-returns on an unchanged value, so the colours are
+  # never re-read from the data file). That means a package update that only changes
+  # the underlying hex values (e.g. re-patching light.txt) would never be picked up
+  # while already running catppuccin/latte/light. Delete the state file first so it's
+  # always regenerated from the current (patched) data on every activation.
   home.activation.caelestiaScheme = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    rm -f "${config.home.homeDirectory}/.local/state/caelestia/scheme.json"
     run --quiet ${config.programs.caelestia.cli.package}/bin/caelestia \
       scheme set -n catppuccin -f latte -m light || true
   '';
