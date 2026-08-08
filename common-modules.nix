@@ -1,11 +1,10 @@
-{ inputs, hyprpanelHyprlandLuaOverlay, imageMagickCompatOverlay }:
+{ inputs, imageMagickCompatOverlay }:
 with inputs; [
   stylix.nixosModules.stylix
   ./configuration.nix
   home-manager.nixosModules.home-manager
   ({ pkgs-unstable, ... }: {
     nixpkgs.overlays = [
-      hyprpanelHyprlandLuaOverlay
       imageMagickCompatOverlay
       inputs.millennium.overlays.default
     ];
@@ -14,9 +13,9 @@ with inputs; [
     };
     home-manager.sharedModules = [
       inputs.zen-browser.homeModules.beta
+      inputs.caelestia-shell.homeManagerModules.default
       {
         nixpkgs.overlays = [
-          hyprpanelHyprlandLuaOverlay
           imageMagickCompatOverlay
           inputs.millennium.overlays.default
         ];

@@ -28,7 +28,7 @@
 | `pkgs2_21` | médias/audio |
 | `pkgs2_22` | compression |
 | `pkgs2_23` | utilitaires divers |
-| `pkgs2_25` | captures d'écran/fond d'écran (`awww`) |
+| `pkgs2_25` | captures d'écran (`hyprshot`, `grim`, `slurp`, `satty`) |
 | `pkgs2_26` | luminosité |
 | `pkgs2_28` | outils Xorg |
 | `unstableGamingPkgs` | exceptions gaming depuis `pkgs-unstable` |

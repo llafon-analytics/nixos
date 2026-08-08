@@ -12,8 +12,10 @@ chargés avec `require()` depuis le `hyprland.lua` généré par Home Manager.
 
 ## Outils liés
 
-- `hyprpanel` (package système + fichiers JSON/SCSS côté home)
-- `hyprlock` + `hypridle`
+- [Caelestia](caelestia.md) : barre, notifications, launcher, verrouillage et fond
+  d'écran (`hm/caelestia.nix`)
+- `hyprlock` + `hypridle` (hyprlock ne sert plus que de secours)
+- `rofi` réduit au sélecteur de fenêtres (`SUPER+W`)
 - script de check des règles: `scripts/check-hyprland-rules.sh`
 
 ## Validation des règles

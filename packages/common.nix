@@ -185,7 +185,6 @@ voice_index.write_text(text)
 
   # 2.1: General Productivity & Multimedia Tools
   pkgs2_1 = with pkgs; [
-    hyprpanel # Hyprland panel integration from nixpkgs
     hyprsunset
     onlyoffice-desktopeditors # Office suite for document editing
     feh # Lightweight image viewer and wallpaper setter
@@ -376,7 +375,6 @@ voice_index.write_text(text)
   pkgs2_25 = with pkgs; [
     hyprshot # Screenshot utility for Hyprland
     hyprpicker # Color picker for Hyprland
-    awww # Animated wallpaper daemon for Wayland
     grim # Grab images from a Wayland compositor
     slurp # Select a region in a Wayland compositor
     satty # Screenshot annotation tool

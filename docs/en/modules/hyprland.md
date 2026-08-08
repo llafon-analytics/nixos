@@ -9,6 +9,13 @@ Both Home Manager modules explicitly select `configType = "lua"`. They deploy
 the shared and host fragments under `$XDG_CONFIG_HOME/hypr` with
 `xdg.configFile`; the generated `hyprland.lua` loads them with `require()`.
 
+Related tools:
+
+- [Caelestia](caelestia.md): bar, notifications, launcher, lock and wallpaper
+  (`hm/caelestia.nix`)
+- `hyprlock` + `hypridle` (hyprlock is now only a fallback)
+- `rofi`, reduced to the window switcher (`SUPER+W`)
+
 Validation helper:
 
 ```sh

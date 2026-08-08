@@ -39,14 +39,11 @@
     ./hm/btop/themes/catppuccin_mocha.theme;
   home.file.".config/YouTube Music/config.json".source = ./hm/youtube-config/config.json;
   home.file.".config/YouTube Music/latte.css".source = ./hm/youtube-config/latte.css;
-  home.file.".config/hyprpanel/config.json".source = ./hm/hyprpanel/config-laptop.json;
-  home.file.".config/hyprpanel/modules.json".source = ./hm/hyprpanel/modules.json;
-  home.file.".config/hyprpanel/modules.scss".source = ./hm/hyprpanel/modules.scss;
   home.file.".config/hypr/hypridle.conf".source = ./hypridle.conf;
   home.file.".config/hypr/hyprlock.conf".source = ./hm/hyprlock/hyprlock.conf;
   home.file.".config/hypr/catppuccin_hyprlock_background_pink.jpg".source =
     ./hm/hyprlock/catppuccin_hyprlock_background_pink.jpg;
-  home.file.".config/hypr/wallpaper.png".source = ./hm/wallpaper/wall3.png;
+  home.file."Pictures/Wallpapers/wall3.png".source = ./hm/wallpaper/wall3.png;
   home.file.".config/hypr/latte.conf".source = ./hm/hyprlock/latte.conf;
   home.file.".config/doom/init.el".source = ./hm/doom/init.el;
   home.file.".config/doom/config.el".source = ./hm/doom/config.el;
@@ -61,6 +58,7 @@
   };
 
   imports = [
+    ./hm/caelestia.nix
     ./hm/zen-browser.nix
     ./hm/vscode.nix
     ./hm/zsh.nix

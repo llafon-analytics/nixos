@@ -1,10 +1,10 @@
 -- Shared Hyprland configuration.
 -- See https://wiki.hypr.land/Configuring/Start/
 
+-- Caelestia (bar, notifications, launcher, lock, wallpaper) is started by its own
+-- systemd user service, bound to graphical-session.target.
 hl.on("hyprland.start", function()
   hl.exec_cmd("~/Documents/nix-configuration/hyprsunset.sh")
-  hl.exec_cmd("bash ~/Documents/nix-configuration/scripts/start-wallpaper.sh")
-  hl.exec_cmd("hyprpanel")
   hl.exec_cmd("clipse -listen")
 end)
 
@@ -134,14 +134,15 @@ hl.bind("SUPER + V", hl.dsp.exec_cmd("kitty --class clipse -e clipse"))
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("kitty"))
 hl.bind(mainMod .. " + Z", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("rofi -show drun"))
+hl.bind(mainMod .. " + space", hl.dsp.exec_cmd("caelestia shell drawers toggle launcher"))
+-- Caelestia has no window switcher, so rofi keeps this one.
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("rofi -show window"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + S", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("hyprpanel toggleWindow settings-dialog"))
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("hyprpanel toggleWindow bar-1"))
-hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("hyprlock"))
+hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("caelestia shell drawers toggle dashboard"))
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("caelestia shell drawers toggle sidebar"))
+hl.bind(mainMod .. " + X", hl.dsp.exec_cmd("caelestia shell lock lock"))
 hl.bind("print", hl.dsp.exec_cmd("hyprshot -m region -z --clipboard-only"))
 hl.bind("CTRL + print", hl.dsp.exec_cmd("/home/desktop/Documents/nix-configuration/scripts/satty-shot.sh"))
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer -i 5"))

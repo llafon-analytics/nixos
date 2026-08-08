@@ -7,10 +7,14 @@
 
 ## Modules partagés importés
 
+- `hm/caelestia.nix`
 - `hm/vscode.nix`
 - `hm/zsh.nix`
 - `hm/neovim.nix`
 - un module WM (`wm-desktop/wm.nix` ou `wm-laptop/wm.nix`)
+
+Le module Home Manager amont de Caelestia est injecté globalement via
+`home-manager.sharedModules` dans `common-modules.nix`.
 
 ## Fichiers déployés
 
@@ -20,7 +24,10 @@ Les deux profils déploient notamment:
 - configs btop
 - configs YouTube Music
 - `hypridle.conf` et `hyprlock`
-- fichiers hyprpanel
+- le fond d'écran dans `Pictures/Wallpapers` (lu par Caelestia)
+
+La configuration de Caelestia (`~/.config/caelestia/{shell,cli}.json`) est générée
+par son module, pas déployée par `home.file`.
 
 ## Différences principales
 

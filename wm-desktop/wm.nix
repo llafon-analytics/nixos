@@ -16,6 +16,8 @@
   };
 
   # Rofi Config
+  # Caelestia's launcher replaced `-show drun` (SUPER+space); rofi is kept only as
+  # a window switcher (SUPER+W), which Caelestia has no equivalent for.
   stylix.targets.rofi.enable = false;
   programs.rofi = {
     enable = true;
@@ -23,7 +25,7 @@
     theme = ./rofi/catppuccin-latte.rasi;
     font = "JetBrainsMono NF";
     extraConfig = {
-      modi = "run,drun,window";
+      modi = "window";
       icon-theme = "Oranchelo";
       show-icons = true;
       terminal = "kitty";
