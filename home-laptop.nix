@@ -39,7 +39,6 @@
     ./hm/btop/themes/catppuccin_mocha.theme;
   home.file.".config/YouTube Music/config.json".source = ./hm/youtube-config/config.json;
   home.file.".config/YouTube Music/latte.css".source = ./hm/youtube-config/latte.css;
-  home.file.".config/hypr/hypridle.conf".source = ./hypridle.conf;
   home.file.".config/hypr/hyprlock.conf".source = ./hm/hyprlock/hyprlock.conf;
   home.file.".config/hypr/catppuccin_hyprlock_background_pink.jpg".source =
     ./hm/hyprlock/catppuccin_hyprlock_background_pink.jpg;

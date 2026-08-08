@@ -311,7 +311,10 @@
   # Enable Hyprland (a Wayland compositor) & Hyprlock/Hypridle.
   programs.hyprland.enable = true;
   programs.hyprlock.enable = true;
-  services.hypridle.enable = true;
+  # Idle handling (lock + screen off) is owned by Caelestia's own idle
+  # daemon (see hm/caelestia.nix), not hypridle. Force it off: the
+  # nixpkgs hyprlock module unconditionally sets this to true.
+  services.hypridle.enable = lib.mkForce false;
 
   # Start the hyprsunset daemon as a user service
   systemd.user.services.hyprsunset = {
