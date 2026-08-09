@@ -1,6 +1,8 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, inputs, ... }:
 
 let
+  caelestiaShell = inputs.caelestia-shell.packages.${pkgs.stdenv.hostPlatform.system}.default;
+
   dockerHelper = pkgs.writeShellApplication {
     name = "gamemode-docker";
     runtimeInputs = with pkgs; [
@@ -239,6 +241,7 @@ let
   userHelper = pkgs.writeShellApplication {
     name = "gamemode-optimizations";
     runtimeInputs = with pkgs; [
+      caelestiaShell
       coreutils
       hyprland
       jq
@@ -300,6 +303,24 @@ let
         XDG_RUNTIME_DIR="$runtime_dir" HYPRLAND_INSTANCE_SIGNATURE="$signature" \
           hyprctl --instance "$signature" reload
         log "declarative Hyprland configuration reloaded on $signature"
+      }
+
+      inhibit_idle() {
+        if XDG_RUNTIME_DIR="$runtime_dir" caelestia-shell ipc call idleInhibitor enable; then
+          log "idle inhibited for the game session"
+        else
+          log "failed to inhibit idle via caelestia-shell"
+          return 1
+        fi
+      }
+
+      uninhibit_idle() {
+        if XDG_RUNTIME_DIR="$runtime_dir" caelestia-shell ipc call idleInhibitor disable; then
+          log "idle inhibitor released"
+        else
+          log "failed to release idle inhibitor via caelestia-shell"
+          return 1
+        fi
       }
 
       suspend_syncthing() {
@@ -366,6 +387,7 @@ let
       run_start() {
         local status=0
         apply_hyprland_profile || status=1
+        inhibit_idle || status=1
         suspend_syncthing || status=1
         sudo --non-interactive "$docker_helper" start || status=1
         return "$status"
@@ -374,6 +396,7 @@ let
       run_end() {
         local status=0
         restore_hyprland_profile || status=1
+        uninhibit_idle || status=1
         restore_syncthing || status=1
         sudo --non-interactive "$docker_helper" end || status=1
         return "$status"
