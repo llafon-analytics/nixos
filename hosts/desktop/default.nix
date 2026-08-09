@@ -33,7 +33,16 @@
 
   virtualisation.docker.enable = true;
   virtualisation.docker.daemon.settings = {
-    shutdown-timeout = 2;
+    # With live-restore on, dockerd exits without stopping anything and the
+    # containerd-shims outlive docker.service (KillMode=process). They then sit
+    # through systemd-shutdown's 90s SIGTERM grace period — shims ignore SIGTERM
+    # and postgres reads it as a smart shutdown — before being SIGKILLed, which
+    # is where the two minutes of shutdown went. Turning it off hands the
+    # containers back to dockerd, which stops them with their own StopSignal.
+    live-restore = false;
+    # Only honoured when live-restore is off. 10s leaves room for a database
+    # checkpoint instead of forcing WAL recovery on the next start.
+    shutdown-timeout = 10;
   };
   virtualisation.libvirtd.enable = true;
   programs.virt-manager.enable = true;
