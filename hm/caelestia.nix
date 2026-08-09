@@ -102,13 +102,12 @@ in
       # source of truth for idle behaviour (hypridle is disabled, see
       # configuration.nix). Set the full timeout list explicitly: it
       # replaces upstream's default list, which ends in suspend/hibernate,
-      # so idle only ever locks then blanks the screen — never sleeps.
+      # so idle only ever locks — screens are never blanked or put to sleep.
       # `timeout` is in seconds (Quickshell's IdleMonitor, not milliseconds).
       general.idle = {
         lockBeforeSleep = true;
         timeouts = [
           { timeout = 300; idleAction = "lock"; }
-          { timeout = 360; idleAction = "dpms off"; returnAction = "dpms on"; }
         ];
       };
     };
