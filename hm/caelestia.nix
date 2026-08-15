@@ -98,6 +98,10 @@ in
       launcher.actionPrefix = "/";
       services.useFahrenheit = false;
 
+      # Upstream's default terminal command isn't installed here, so CLI apps
+      # launched from the launcher silently fail to spawn. Force kitty.
+      general.apps.terminal = [ "kitty" "-e" ];
+
       # Caelestia's own idle daemon (IdleMonitors.qml) is now the single
       # source of truth for idle behaviour (hypridle is disabled, see
       # configuration.nix). Set the full timeout list explicitly: it
