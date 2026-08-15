@@ -157,7 +157,6 @@ voice_index.write_text(text)
     protonup-qt # GUI tool to update Proton versions
     protontricks # Utility for managing Proton tweaks
     gwe
-    retroarch-full
     lsfg-vk
     lsfg-vk-ui
     steamtinkerlaunch # Tool to tweak Steam launch options
@@ -411,6 +410,7 @@ in
   programs.steam = {
     enable = true;
     package = pkgs.millennium-steam;
+    extest.enable = true; # Fixes invisible/desync cursor with Steam Input "As Mouse" on Wayland
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
