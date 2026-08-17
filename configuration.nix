@@ -280,6 +280,15 @@
   # Enable Flatpak support for sandboxed applications.
   services.flatpak.enable = true;
 
+  # Enable local, network (driverless IPP/AirPrint), and USB printing.
+  services.printing.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+  services.ipp-usb.enable = true;
+
   # Enable Udisks2 for disk management and mounting.
   services.udisks2.enable = true;
 
