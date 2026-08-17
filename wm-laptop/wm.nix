@@ -4,6 +4,9 @@
   # Hyprland Config
   wayland.windowManager.hyprland = {
     enable = true;
+    # NixOS owns the complete Hyprland/GTK/KDE portal set. Installing only
+    # Hyprland here would mask the system backend descriptors in XDG_DATA_DIRS.
+    portalPackage = null;
     configType = "lua";
     extraConfig = ''
       require("base")
