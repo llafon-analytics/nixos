@@ -98,6 +98,37 @@ in
       launcher.actionPrefix = "/";
       services.useFahrenheit = false;
 
+      # Keep the bar controls aligned with the selected Nexus settings.  The
+      # laptop keeps its hardware-specific indicators while the desktop bar
+      # stays focused on the shared controls.
+      bar = {
+        activeWindow = {
+          compact = false;
+          inverted = false;
+          showOnHover = false;
+        };
+        popouts = {
+          activeWindow = true;
+          tray = true;
+          statusIcons = true;
+        };
+        tray = {
+          background = false;
+          recolour = true;
+          compact = false;
+        };
+        statusIcons = [
+          { id = "lockStatus"; enabled = true; }
+          { id = "audio"; enabled = true; }
+          { id = "microphone"; enabled = true; }
+          { id = "kbLayout"; enabled = false; }
+          { id = "network"; enabled = true; }
+        ] ++ lib.optionals (config.home.username == "laptop") [
+          { id = "bluetooth"; enabled = true; }
+          { id = "battery"; enabled = true; }
+        ];
+      };
+
       # Upstream's default terminal command isn't installed here, so CLI apps
       # launched from the launcher silently fail to spawn. Force kitty.
       general.apps.terminal = [ "kitty" "-e" ];
