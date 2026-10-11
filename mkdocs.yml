@@ -54,6 +54,7 @@ nav:
           - Overlays: modules/overlays.md
           - GPU: modules/gpu.md
           - Hyprland: modules/hyprland.md
+          - Caelestia: modules/caelestia.md
           - Stylix: modules/stylix.md
           - Services: modules/services.md
       - Opérations:
@@ -92,6 +93,7 @@ nav:
           - Overlays: en/modules/overlays.md
           - GPU: en/modules/gpu.md
           - Hyprland: en/modules/hyprland.md
+          - Caelestia: en/modules/caelestia.md
           - Stylix: en/modules/stylix.md
           - Services: en/modules/services.md
       - Operations:

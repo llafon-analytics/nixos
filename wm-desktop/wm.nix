@@ -4,6 +4,9 @@
   # Hyprland Config
   wayland.windowManager.hyprland = {
     enable = true;
+    # NixOS owns the complete Hyprland/GTK/KDE portal set. Installing only
+    # Hyprland here would mask the system backend descriptors in XDG_DATA_DIRS.
+    portalPackage = null;
     configType = "lua";
     extraConfig = ''
       require("base")
@@ -16,6 +19,8 @@
   };
 
   # Rofi Config
+  # Caelestia's launcher replaced `-show drun` (SUPER+space); rofi is kept only as
+  # a window switcher (SUPER+W), which Caelestia has no equivalent for.
   stylix.targets.rofi.enable = false;
   programs.rofi = {
     enable = true;
@@ -23,7 +28,7 @@
     theme = ./rofi/catppuccin-latte.rasi;
     font = "JetBrainsMono NF";
     extraConfig = {
-      modi = "run,drun,window";
+      modi = "window";
       icon-theme = "Oranchelo";
       show-icons = true;
       terminal = "kitty";

@@ -1,6 +1,15 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 let
+  # Must be the exact same derivation the "desktop" user's caelestia.service runs
+  # (home-manager.useGlobalPkgs = false means its pkgs is a separate instantiation
+  # from this NixOS module's, so re-resolving `inputs.caelestia-shell.packages.*.default`
+  # here would build a different store path). caelestia-shell's IPC instance lookup is
+  # self-referential to its own $out/share/caelestia-shell/shell.qml, so a mismatched
+  # store path means `ipc call` silently targets an instance that never runs, and
+  # inhibit_idle/uninhibit_idle below fail with "No running instances for ...".
+  caelestiaShell = config.home-manager.users.desktop.programs.caelestia.package;
+
   dockerHelper = pkgs.writeShellApplication {
     name = "gamemode-docker";
     runtimeInputs = with pkgs; [
@@ -239,6 +248,7 @@ let
   userHelper = pkgs.writeShellApplication {
     name = "gamemode-optimizations";
     runtimeInputs = with pkgs; [
+      caelestiaShell
       coreutils
       hyprland
       jq
@@ -286,7 +296,7 @@ let
         fi
 
         XDG_RUNTIME_DIR="$runtime_dir" HYPRLAND_INSTANCE_SIGNATURE="$signature" \
-          hyprctl --instance "$signature" eval 'hl.config({ animations = { enabled = false }, decoration = { rounding = 0, active_opacity = 1, inactive_opacity = 1, fullscreen_opacity = 1, blur = { enabled = false }, shadow = { enabled = false } }, debug = { disable_logs = true } })'
+          hyprctl --instance "$signature" eval 'hl.config({ animations = { enabled = false }, general = { border_size = 0 }, decoration = { rounding = 0, blur = { enabled = false }, shadow = { enabled = false } }, debug = { disable_logs = true } }); hl.window_rule({ match = { class = ".*" }, opacity = "1.0 override 1.0 override" })'
         log "lightweight Hyprland profile applied to $signature"
       }
 
@@ -300,6 +310,24 @@ let
         XDG_RUNTIME_DIR="$runtime_dir" HYPRLAND_INSTANCE_SIGNATURE="$signature" \
           hyprctl --instance "$signature" reload
         log "declarative Hyprland configuration reloaded on $signature"
+      }
+
+      inhibit_idle() {
+        if XDG_RUNTIME_DIR="$runtime_dir" caelestia-shell ipc call idleInhibitor enable; then
+          log "idle inhibited for the game session"
+        else
+          log "failed to inhibit idle via caelestia-shell"
+          return 1
+        fi
+      }
+
+      uninhibit_idle() {
+        if XDG_RUNTIME_DIR="$runtime_dir" caelestia-shell ipc call idleInhibitor disable; then
+          log "idle inhibitor released"
+        else
+          log "failed to release idle inhibitor via caelestia-shell"
+          return 1
+        fi
       }
 
       suspend_syncthing() {
@@ -366,6 +394,7 @@ let
       run_start() {
         local status=0
         apply_hyprland_profile || status=1
+        inhibit_idle || status=1
         suspend_syncthing || status=1
         sudo --non-interactive "$docker_helper" start || status=1
         return "$status"
@@ -374,6 +403,7 @@ let
       run_end() {
         local status=0
         restore_hyprland_profile || status=1
+        uninhibit_idle || status=1
         restore_syncthing || status=1
         sudo --non-interactive "$docker_helper" end || status=1
         return "$status"

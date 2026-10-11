@@ -31,6 +31,7 @@
   imports =
     [
       ./packages/common.nix # Common package definitions
+      ./modules/xdg-portal.nix # XDG portal backend routing (KDE FileChooser)
       #  ./python.nix      # Python-specific configurations
     ];
 
@@ -96,6 +97,8 @@
 
   # Firewall configuration: use a loose reverse path check.
   networking.firewall.checkReversePath = "loose";
+
+  networking.networkmanager.wifi.powersave = false;
 
   # Enable wireless support (wpa_supplicant will be used).
   # networking.wireless.enable = true;
@@ -180,6 +183,8 @@
       nerd-fonts.jetbrains-mono # JetBrains Mono with extra glyphs.
       dejavu_fonts
       liberation_ttf
+      material-symbols # Caelestia icon font; its bar renders boxes without it.
+      nerd-fonts.caskaydia-cove # Caelestia default UI font.
     ];
     fontconfig = {
       # Enable antialiasing to improve font rendering.
@@ -266,17 +271,23 @@
   # Enable D-Bus for inter-process communication.
   services.dbus.enable = true;
 
-  # Enable XDG portals, adding the GTK portal for better GTK application compatibility.
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-  };
+  # XDG portals (backends and per-interface routing) live in
+  # ./modules/xdg-portal.nix.
 
   ##############################
   # 13. Additional Service Configurations
   ##############################
   # Enable Flatpak support for sandboxed applications.
   services.flatpak.enable = true;
+
+  # Enable local, network (driverless IPP/AirPrint), and USB printing.
+  services.printing.enable = true;
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    openFirewall = true;
+  };
+  services.ipp-usb.enable = true;
 
   # Enable Udisks2 for disk management and mounting.
   services.udisks2.enable = true;
@@ -307,7 +318,10 @@
   # Enable Hyprland (a Wayland compositor) & Hyprlock/Hypridle.
   programs.hyprland.enable = true;
   programs.hyprlock.enable = true;
-  services.hypridle.enable = true;
+  # Idle handling (lock + screen off) is owned by Caelestia's own idle
+  # daemon (see hm/caelestia.nix), not hypridle. Force it off: the
+  # nixpkgs hyprlock module unconditionally sets this to true.
+  services.hypridle.enable = lib.mkForce false;
 
   # Start the hyprsunset daemon as a user service
   systemd.user.services.hyprsunset = {

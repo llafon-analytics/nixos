@@ -37,6 +37,12 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
     stylix.url = "github:danth/stylix/release-26.05";
+    # Caelestia builds on quickshell (git), which tracks nixos-unstable; pinning it to
+    # stable 26.05 is the likeliest way to break the build.
+    caelestia-shell = {
+      url = "github:caelestia-dots/shell";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -52,13 +58,11 @@
     let
       system = "x86_64-linux";
       desktopPorts = import ./hosts/desktop/ports.nix;
-      hyprpanelHyprlandLuaOverlay = import ./overlays/hyprpanel-hyprland-lua.nix;
       imageMagickCompatOverlay = import ./overlays/imagemagick-compat.nix;
       commonModules = import ./common-modules.nix {
-        inherit inputs hyprpanelHyprlandLuaOverlay imageMagickCompatOverlay;
+        inherit inputs imageMagickCompatOverlay;
       };
     in {
-      overlays.hyprpanel-hyprland-lua = hyprpanelHyprlandLuaOverlay;
       overlays.imagemagick-compat = imageMagickCompatOverlay;
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {

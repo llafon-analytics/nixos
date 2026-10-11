@@ -36,8 +36,8 @@ configuration Lua déclarative et restaure exactement les services et
 conteneurs mémorisés. Les états sont verrouillés et stockés séparément sous
 `/run/user/$UID` et `/run/gamemode-docker`.
 
-Discord, EasyEffects, PipeWire/WirePlumber, Kitty, btop, Steam, Hyprpanel, le
-wallpaper, Clipse, lactd, KDE Connect, Tailscale et libvirt restent actifs. Les
+Discord, EasyEffects, PipeWire/WirePlumber, Kitty, btop, Steam, Caelestia (barre et
+fond d'écran), Clipse, lactd, KDE Connect, Tailscale et libvirt restent actifs. Les
 deux moniteurs et le VRR ne sont pas modifiés. Le direct scanout n'est pas forcé
 sur ce poste NVIDIA à double écran : Hyprland 0.55.4 le prend en charge, mais ce
 chemin doit être validé jeu par jeu avant d'être considéré stable ici.

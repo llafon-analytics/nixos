@@ -1,6 +1,9 @@
 { config, pkgs, pkgs-unstable, lib, inputs, ... }:
 
 let
+  openNow = pkgs.callPackage ./opennow.nix { };
+  steaminputdbBuddy = pkgs.callPackage ./steaminputdb-buddy.nix { };
+
   discordBase = pkgs-unstable.discord.override {
     withVencord = true;
   };
@@ -154,7 +157,6 @@ voice_index.write_text(text)
     protonup-qt # GUI tool to update Proton versions
     protontricks # Utility for managing Proton tweaks
     gwe
-    retroarch-full
     lsfg-vk
     lsfg-vk-ui
     steamtinkerlaunch # Tool to tweak Steam launch options
@@ -182,7 +184,6 @@ voice_index.write_text(text)
 
   # 2.1: General Productivity & Multimedia Tools
   pkgs2_1 = with pkgs; [
-    hyprpanel # Hyprland panel integration from nixpkgs
     hyprsunset
     onlyoffice-desktopeditors # Office suite for document editing
     feh # Lightweight image viewer and wallpaper setter
@@ -344,6 +345,8 @@ voice_index.write_text(text)
 
   # 2.21: Media Players & Streaming Tools
   pkgs2_21 = with pkgs; [
+    openNow # Open-source GeForce NOW desktop client
+    steaminputdbBuddy # SteamInputDB.com Steam client integration (Buddy app)
     mpv # Versatile media player
     yt-dlp # Command-line YouTube downloader
     pamixer # Command-line PulseAudio mixer utility
@@ -371,7 +374,6 @@ voice_index.write_text(text)
   pkgs2_25 = with pkgs; [
     hyprshot # Screenshot utility for Hyprland
     hyprpicker # Color picker for Hyprland
-    awww # Animated wallpaper daemon for Wayland
     grim # Grab images from a Wayland compositor
     slurp # Select a region in a Wayland compositor
     satty # Screenshot annotation tool
@@ -408,10 +410,14 @@ in
   programs.steam = {
     enable = true;
     package = pkgs.millennium-steam;
+    extest.enable = true; # Fixes invisible/desync cursor with Steam Input "As Mouse" on Wayland
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-    # gamescopeSession.enable = true;
+    extraPackages = with pkgs; [
+      flatpak
+    ];
+    #   gamescopeSession.enable = true;
     #
   };
   programs.gamescope.enable = true;
