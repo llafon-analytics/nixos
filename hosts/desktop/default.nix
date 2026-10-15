@@ -1,7 +1,8 @@
 { desktopPorts ? import ./ports.nix, ... }:
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 {
   imports = [
+    inputs.nix-craftapps.nixosModules.default
     ../../hardware-configuration-desktop.nix
     ../../nvidiagpu.nix
     ../../packages/desktop.nix
@@ -9,6 +10,11 @@
     # ../../drivers/rtl8852cu.nix
     ../../drivers/rtw89.nix
   ];
+
+  programs.craftapps = {
+    enable = true;
+    apps.photocraft.enable = true;
+  };
 
   networking.firewall = {
     allowedTCPPorts = desktopPorts;
