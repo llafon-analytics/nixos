@@ -56,6 +56,8 @@
   # Use systemd-boot as the bootloader and allow it to manage EFI variables.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+  # Menu shown for 1s instead of the 5s default.
+  boot.loader.timeout = 1;
 
   # Secure boot: include a secret for the initrd (adjust as needed).
   # boot.initrd.secrets = {
