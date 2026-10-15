@@ -26,6 +26,11 @@
   # changes in each release.
   home.stateVersion = "25.11";
 
+  # Stylix's KDE activation needs a running Plasma session, so at boot it only
+  # fails (xcb_connect) after ~0.8s on the critical path. The autostart entry
+  # still applies the theme when a Plasma session starts.
+  home.activation.stylixLookAndFeel = lib.mkForce (lib.hm.dag.entryAfter [ "writeBoundary" ] "");
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 
