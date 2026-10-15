@@ -96,7 +96,8 @@ in
     settings = {
       paths.wallpaperDir = "${config.home.homeDirectory}/Pictures/Wallpapers";
       launcher.actionPrefix = "/";
-      services.useFahrenheit = false;
+      services.weatherUnits = "celsius";
+      services.sensorUnits = "celsius";
 
       # Keep the bar controls aligned with the selected Nexus settings.  The
       # laptop keeps its hardware-specific indicators while the desktop bar
