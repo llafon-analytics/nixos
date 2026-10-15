@@ -59,7 +59,6 @@
     ./hm/vscode.nix
     ./hm/zsh.nix
     ./hm/neovim.nix
-    ./hm/steaminputdb-buddy.nix
     ./hm/fastfetch.nix
     ./wm-desktop/wm.nix
   ];
