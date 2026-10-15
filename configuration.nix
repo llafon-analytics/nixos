@@ -71,7 +71,8 @@
   };
 
   # Configure custom kernel modules against the stable kernel selected by nixpkgs.
-  boot.kernelModules = [ "v4l2loopback" ];
+  # snd_aloop provides the ALSA loopback device droidcam needs for its audio stream.
+  boot.kernelModules = [ "v4l2loopback" "snd_aloop" ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
   boot.extraModprobeConfig = ''
     # Configure v4l2loopback: virtual camera settings for apps like Skype, Zoom, and Teams.

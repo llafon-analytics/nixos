@@ -58,11 +58,13 @@
     let
       system = "x86_64-linux";
       desktopPorts = import ./hosts/desktop/ports.nix;
+      droidcamTransformBufferOverlay = import ./overlays/droidcam-transform-buffer.nix;
       imageMagickCompatOverlay = import ./overlays/imagemagick-compat.nix;
       commonModules = import ./common-modules.nix {
-        inherit inputs imageMagickCompatOverlay;
+        inherit inputs droidcamTransformBufferOverlay imageMagickCompatOverlay;
       };
     in {
+      overlays.droidcam-transform-buffer = droidcamTransformBufferOverlay;
       overlays.imagemagick-compat = imageMagickCompatOverlay;
       nixosConfigurations = {
         laptop = nixpkgs.lib.nixosSystem {

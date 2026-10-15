@@ -1,0 +1,38 @@
+diff --git a/src/decoder.c b/src/decoder.c
+index 049a78b..32087d4 100644
+--- a/src/decoder.c
++++ b/src/decoder.c
+@@ -294,6 +294,7 @@ void decoder_cleanup() {
+ void process_frame(JPGFrame *frame) {
+     unsigned long len = (unsigned long)frame->length;
+     BYTE *p = frame->data;
++    BYTE *transformed = NULL;
+ 
+     if (jpg_decoder.subsamp == 0) {
+         int width, height, subsamp, colorspace;
+@@ -321,10 +322,12 @@ void process_frame(JPGFrame *frame) {
+     }
+ 
+     if (jpg_decoder.transform.op) {
+-        if (tjTransform(jpg_decoder.tjXform, p, len, 1, &p, &len, &jpg_decoder.transform, 0)) {
++        if (tjTransform(jpg_decoder.tjXform, p, len, 1, &transformed, &len, &jpg_decoder.transform, 0)) {
+             errprint("tjTransform failure: %s\n", tjGetErrorStr());
++            FREE_OBJECT(transformed, tjFree);
+             return;
+         }
++        p = transformed;
+     }
+ 
+     if (tjDecompressToYUVPlanes(jpg_decoder.tj, p, len,
+@@ -333,9 +336,11 @@ void process_frame(JPGFrame *frame) {
+             TJFLAG_FASTDCT | TJFLAG_FASTUPSAMPLE))
+     {
+         errprint("tjDecompressToYUV2 failure: %d\n", tjGetErrorCode(jpg_decoder.tj));
++        FREE_OBJECT(transformed, tjFree);
+         return;
+     }
+ 
++    FREE_OBJECT(transformed, tjFree);
+     decoder_share_frame();
+     return;
+ }

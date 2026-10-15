@@ -1,10 +1,11 @@
-{ inputs, imageMagickCompatOverlay }:
+{ inputs, droidcamTransformBufferOverlay, imageMagickCompatOverlay }:
 with inputs; [
   stylix.nixosModules.stylix
   ./configuration.nix
   home-manager.nixosModules.home-manager
   ({ pkgs-unstable, ... }: {
     nixpkgs.overlays = [
+      droidcamTransformBufferOverlay
       imageMagickCompatOverlay
       inputs.millennium.overlays.default
     ];
@@ -16,6 +17,7 @@ with inputs; [
       inputs.caelestia-shell.homeManagerModules.default
       {
         nixpkgs.overlays = [
+          droidcamTransformBufferOverlay
           imageMagickCompatOverlay
           inputs.millennium.overlays.default
         ];
