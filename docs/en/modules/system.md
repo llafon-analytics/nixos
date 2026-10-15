@@ -5,5 +5,4 @@ Covers boot/kernel, networking, locale, users, Nix settings, Wayland programs, a
 Notable points:
 
 - `services.tailscale.enable = true`
-- user service `hyprsunset`
 - `system.stateVersion = "23.05"`

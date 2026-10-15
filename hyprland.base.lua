@@ -4,7 +4,6 @@
 -- Caelestia (bar, notifications, launcher, lock, wallpaper) is started by its own
 -- systemd user service, bound to graphical-session.target.
 hl.on("hyprland.start", function()
-  hl.exec_cmd("~/Documents/nix-configuration/hyprsunset.sh")
   hl.exec_cmd("clipse -listen")
 end)
 

@@ -182,7 +182,6 @@ voice_index.write_text(text)
 
   # 2.1: General Productivity & Multimedia Tools
   pkgs2_1 = with pkgs; [
-    hyprsunset
     onlyoffice-desktopeditors # Office suite for document editing
     feh # Lightweight image viewer and wallpaper setter
     libmpg123 # MP3 decoding library

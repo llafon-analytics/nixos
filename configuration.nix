@@ -326,17 +326,6 @@
   # nixpkgs hyprlock module unconditionally sets this to true.
   services.hypridle.enable = lib.mkForce false;
 
-  # Start the hyprsunset daemon as a user service
-  systemd.user.services.hyprsunset = {
-    description = "Hyprsunset color temperature control";
-    serviceConfig = {
-      # Start hyprsunset with --identity so the display
-      # color is initially unmodified until adjusted by hyprsunset.sh
-      ExecStart = "${pkgs.hyprsunset}/bin/hyprsunset --identity";
-    };
-    wantedBy = [ "graphical-session.target" ];
-  };
-
   # Enable KDE Connect for device integration.
   programs.kdeconnect.enable = true;
 

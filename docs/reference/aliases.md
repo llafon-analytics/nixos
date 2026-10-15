@@ -13,8 +13,6 @@
 | `skb` | switch layout clavier Hyprland |
 | `extract` | `~/extract.sh` |
 | `dpms` | cycle dpms Hyprland |
-| `4000` | température Hyprsunset 4000K |
-| `identity` | reset température Hyprsunset |
 
 ## direnv
 

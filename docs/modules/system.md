@@ -14,5 +14,4 @@
 ## Points notables
 
 - Service Tailscale activé globalement.
-- Service user `hyprsunset` activé sur session graphique.
 - `system.stateVersion = "23.05"`.

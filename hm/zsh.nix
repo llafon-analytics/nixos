@@ -26,8 +26,6 @@
         skb = "hyprctl switchxkblayout htltek-gaming-keyboard next";
         extract="~/extract.sh";
         dpms = "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })' && sleep 2 && hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'";
-        "4000" = "hyprctl hyprsunset temperature 4000";
-        identity = "hyprctl hyprsunset identity";
 
     };
     plugins = [
