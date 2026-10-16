@@ -124,8 +124,11 @@ voice_index.write_text(text)
       postBuild = ''
         for bin in ${lib.concatStringsSep " " bins}; do
           if [ -e "$out/bin/$bin" ]; then
+            # Chromium's VAAPI decode (nvidia-vaapi-driver) makes received streams judder;
+            # NVENC encoding lives in discord_voice and is unaffected.
             wrapProgram "$out/bin/$bin" \
-              --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib
+              --prefix LD_LIBRARY_PATH : /run/opengl-driver/lib \
+              --add-flags "--disable-accelerated-video-decode"
           fi
         done
       '';
