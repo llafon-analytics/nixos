@@ -67,7 +67,7 @@ hl.config({
     force_default_wallpaper = -1,
     disable_hyprland_logo = true,
     focus_on_activate = true,
-    vrr = 1,
+    vrr = 3,
     animate_manual_resizes = false,
     animate_mouse_windowdragging = false,
     on_focus_under_fullscreen = 2,
