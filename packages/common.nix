@@ -143,6 +143,14 @@ voice_index.write_text(text)
     bins = [ "DiscordCanary" "discordcanary" ];
   };
 
+  # The layer is injected into every Vulkan process; linking libstdc++ statically avoids
+  # "GLIBCXX_3.4.35 not found" when the host process already loaded an older libstdc++.
+  lsfgVkStatic = pkgs-unstable.lsfg-vk.overrideAttrs (old: {
+    cmakeFlags = old.cmakeFlags ++ [
+      "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc"
+    ];
+  });
+
   # Policy: pkgs is stable by default. Only explicitly selected fast-moving gaming packages use unstable.
   unstableGamingPkgs = with pkgs-unstable; [
     winetricks # Helper to run Windows applications via Wine
@@ -156,7 +164,7 @@ voice_index.write_text(text)
     protonup-qt # GUI tool to update Proton versions
     protontricks # Utility for managing Proton tweaks
     gwe
-    lsfg-vk
+    lsfgVkStatic
     lsfg-vk-ui
     steamtinkerlaunch # Tool to tweak Steam launch options
   ];
