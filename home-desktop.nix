@@ -63,6 +63,8 @@
     ./hm/zen-browser.nix
     ./hm/vscode.nix
     ./hm/zsh.nix
+    ./hm/cli-tools.nix
+    ./hm/pyprland.nix
     ./hm/neovim.nix
     ./hm/fastfetch.nix
     ./wm-desktop/wm.nix
@@ -74,6 +76,9 @@
     profileName = "Default Profile";
   };
   services.syncthing.enable = true;
+
+  # Docker only runs on the desktop.
+  programs.lazydocker.enable = true;
 
   programs.zsh.shellAliases = {
     valheim = "cd /home/desktop/.steam/steam/steamapps/common/Valheim/ && gamemoderun mangohud steam-run /home/desktop/.steam/steam/steamapps/common/Valheim/start_game_bepinex.sh";

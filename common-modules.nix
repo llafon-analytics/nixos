@@ -1,6 +1,7 @@
 { inputs, droidcamTransformBufferOverlay, imageMagickCompatOverlay }:
 with inputs; [
   stylix.nixosModules.stylix
+  nix-index-database.nixosModules.nix-index
   ./configuration.nix
   home-manager.nixosModules.home-manager
   ({ pkgs-unstable, ... }: {

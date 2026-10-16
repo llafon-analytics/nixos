@@ -61,6 +61,8 @@
     ./hm/zen-browser.nix
     ./hm/vscode.nix
     ./hm/zsh.nix
+    ./hm/cli-tools.nix
+    ./hm/pyprland.nix
     ./hm/neovim.nix
     ./hm/fastfetch.nix
     ./wm-laptop/wm.nix

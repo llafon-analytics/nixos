@@ -52,6 +52,11 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
       inputs.home-manager.follows = "home-manager";
     };
+    # Prebuilt weekly nix-index database, used by comma and command-not-found.
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     catppuccin-zen = {
       url = "github:catppuccin/zen-browser";
       flake = false;

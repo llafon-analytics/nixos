@@ -85,6 +85,13 @@ hl.config({
   master = {
     new_status = "master",
   },
+  -- Horizontal scrolling layout, opted into per workspace with SUPER+CTRL+S.
+  scrolling = {
+    column_width = 0.5,
+    fullscreen_on_one_column = true,
+    focus_fit_method = 1,
+    follow_focus = true,
+  },
   group = {
     col = {
       border_active = "rgba(ea76cbe6)",
@@ -185,8 +192,13 @@ hl.window_rule({ match = { class = "(clipse)" }, float = true })
 hl.window_rule({ match = { class = "(clipse)" }, size = { 622, 652 } })
 hl.window_rule({ match = { class = "(clipse)" }, stay_focused = true })
 
+-- Pyprland drop-down terminal (hm/pyprland.nix). Floating is declared here too so
+-- it survives a `hyprctl reload` that drops pyprland's runtime rules.
+hl.window_rule({ match = { class = "kitty-dropterm" }, float = true })
+
 hl.bind("SUPER + V", hl.dsp.exec_cmd("kitty --class clipse -e clipse"))
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("kitty"))
+hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd("pypr toggle term"))
 hl.bind(mainMod .. " + Z", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + space", hl.dsp.global("caelestia:launcher"))
@@ -194,6 +206,22 @@ hl.bind(mainMod .. " + space", hl.dsp.global("caelestia:launcher"))
 hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("rofi -show window"))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + S", hl.dsp.layout("togglesplit"))
+
+-- Switch the active workspace between dwindle and the scrolling layout. The rule
+-- merges into the workspace's existing rule (monitor, default) and is dropped on
+-- reload, so dwindle stays the default everywhere.
+local function toggle_scrolling()
+  local ws = hl.get_active_workspace()
+  if not ws or ws.special then
+    return
+  end
+  local layout = ws.tiled_layout == "scrolling" and "dwindle" or "scrolling"
+  hl.workspace_rule({ workspace = tostring(ws.id), layout = layout })
+  -- Workspace rules alone don't re-run layout matching; setting general.layout does.
+  hl.config({ general = { layout = "dwindle" } })
+end
+
+hl.bind(mainMod .. " + CTRL + S", toggle_scrolling)
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + M", hl.dsp.global("caelestia:dashboard"))
 hl.bind(mainMod .. " + B", hl.dsp.global("caelestia:sidebar"))
@@ -206,10 +234,24 @@ hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ to
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -q s 5%-"))
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -q s +5%"))
 
-hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "l" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "r" }))
-hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "u" }))
-hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "d" }))
+-- Directional focus is geometric, which misses off-screen columns of the scrolling
+-- layout; there the layout's own focus scrolls them into view instead.
+local function focus(direction)
+  return function()
+    local ws = hl.get_active_workspace()
+    local win = hl.get_active_window()
+    if ws and ws.tiled_layout == "scrolling" and win and not win.floating then
+      hl.dispatch(hl.dsp.layout("focus " .. direction))
+    else
+      hl.dispatch(hl.dsp.focus({ direction = direction }))
+    end
+  end
+end
+
+hl.bind(mainMod .. " + H", focus("l"))
+hl.bind(mainMod .. " + L", focus("r"))
+hl.bind(mainMod .. " + K", focus("u"))
+hl.bind(mainMod .. " + J", focus("d"))
 
 local workspaceKeys = {
   "ampersand",
