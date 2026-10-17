@@ -15,6 +15,8 @@
       require("host")
     '';
   };
+  imports = [ ./scripts.nix ];
+
   xdg.configFile."hypr/base.lua".source = ./hyprland.base.lua;
 
   # Caelestia's launcher replaced `-show drun` (SUPER+space); rofi is kept only as

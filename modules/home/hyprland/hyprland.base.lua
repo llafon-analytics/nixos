@@ -186,10 +186,7 @@ hl.device({
 
 local mainMod = "SUPER"
 
-hl.bind(
-  mainMod .. " + semicolon",
-  hl.dsp.exec_cmd("/home/desktop/Documents/nix-configuration/scripts/mute-discord.sh toggle")
-)
+hl.bind(mainMod .. " + semicolon", hl.dsp.exec_cmd("mute-discord toggle"))
 
 hl.window_rule({ match = { class = "(clipse)" }, float = true })
 hl.window_rule({ match = { class = "(clipse)" }, size = { 622, 652 } })
@@ -236,7 +233,7 @@ hl.bind(mainMod .. " + M", hl.dsp.global("caelestia:dashboard"))
 hl.bind(mainMod .. " + B", hl.dsp.global("caelestia:sidebar"))
 hl.bind(mainMod .. " + X", hl.dsp.global("caelestia:lock"))
 hl.bind("print", hl.dsp.exec_cmd("hyprshot -m region -z --clipboard-only"))
-hl.bind("CTRL + print", hl.dsp.exec_cmd("/home/desktop/Documents/nix-configuration/scripts/satty-shot.sh"))
+hl.bind("CTRL + print", hl.dsp.exec_cmd("satty-shot"))
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd("pamixer -i 5"))
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd("pamixer -d 5"))
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"))
