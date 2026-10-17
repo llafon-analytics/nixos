@@ -39,7 +39,7 @@ let
     up || fail "mkdocs ne répond pas sur le port ${docsPort}"
 
     ${chromium} --ozone-platform=wayland --user-data-dir="$state/chromium" \
-      --class=chromium-docs --app=http://127.0.0.1:${docsPort}
+      --app=http://127.0.0.1:${docsPort}
   '';
 
   # nixpkgs has no Linux ChatGPT app (the `chatgpt` attribute is the macOS .dmg), so
@@ -48,7 +48,7 @@ let
   chatgptApp = pkgs.writeShellScript "chatgpt-app" ''
     exec ${chromium} --ozone-platform=wayland \
       --user-data-dir="''${XDG_STATE_HOME:-$HOME/.local/state}/pypr-chatgpt" \
-      --class=chromium-chatgpt --app=https://chatgpt.com
+      --app=https://chatgpt.com
   '';
 
   # Versioned with the modules it describes; the store path changes with its content.
@@ -64,7 +64,7 @@ let
     for _ in $(seq 30); do
       if ${lib.getExe' pkgs.libnotify "notify-send"} -a NixOS -i help-about \
         "Nouveautés de la configuration" \
-        "SUPER + ALT + & : aide-mémoire · nouveaux : ALT+é documentation, ALT+\" ChatGPT"; then
+        "SUPER + ALT + & : aide-mémoire · nouveaux : ALT+é documentation, SUPER+C ChatGPT"; then
         mkdir -p "$state"
         echo "${cheatsheet}" > "$seen"
         exit 0
@@ -78,7 +78,7 @@ in
   # Pyprland drop-down terminal, toggled with SUPER+SHIFT+Return (hyprland.base.lua).
   # The kitty process lives on between toggles, so the shell session is kept.
   # SUPER+ALT+& toggles the cheatsheet the same way, SUPER+ALT+é the MkDocs documentation
-  # and SUPER+ALT+" ChatGPT.
+  # and SUPER+C ChatGPT.
   home.packages = [ pkgs.pyprland ];
 
   xdg.configFile."pypr/config.toml".source = toml.generate "pyprland-config.toml" {
@@ -101,10 +101,11 @@ in
       lazy = true;
     };
     # Chromium apps share one process per profile, so windows are matched by class
-    # instead of PID (process_tracking = false also forces lazy).
+    # instead of PID (process_tracking = false also forces lazy). In --app mode Chromium
+    # ignores --class and derives the app_id from the URL: chrome-<host>__<path>-<profile>.
     scratchpads.docs = {
       command = "${docsScratchpad}";
-      class = "chromium-docs";
+      class = "chrome-127.0.0.1__-Default";
       match_by = "class";
       process_tracking = false;
       animation = "fromTop";
@@ -113,7 +114,7 @@ in
     };
     scratchpads.chatgpt = {
       command = "${chatgptApp}";
-      class = "chromium-chatgpt";
+      class = "chrome-chatgpt.com__-Default";
       match_by = "class";
       process_tracking = false;
       animation = "fromTop";

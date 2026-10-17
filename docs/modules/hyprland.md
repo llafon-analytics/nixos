@@ -66,11 +66,11 @@ notification.
 
 ## Documentation et ChatGPT (Pyprland)
 
-`SUPER + ALT + é` affiche ou masque la documentation du dépôt, `SUPER + ALT + "` ChatGPT.
+`SUPER + ALT + é` affiche ou masque la documentation du dépôt, `SUPER + C` ChatGPT.
 Les deux sont des fenêtres Chromium en mode application (`--app`), flottantes et
-indépendantes du workspace, gérées par Pyprland (classes `chromium-docs` et
-`chromium-chatgpt`, appariement par classe car Chromium partage un processus par
-profil).
+indépendantes du workspace, gérées par Pyprland (classes `chrome-127.0.0.1__-Default` et
+`chrome-chatgpt.com__-Default`, appariement par classe car Chromium partage un
+processus par profil et impose lui-même l'`app_id` à partir de l'URL).
 
 - **Documentation** : le script `docs-scratchpad` (`hm/pyprland.nix`) lance
   `mkdocs serve` sur `127.0.0.1:8765` (environnement partagé avec `mkdocs.nix`
@@ -83,7 +83,7 @@ profil).
   l'app macOS et ne s'évalue pas sous Linux) ; l'application web tourne donc
   dans un profil Chromium dédié (`~/.local/state/pypr-chatgpt`), qui conserve la
   session. Se connecter une fois ; masquer la fenêtre ne l'arrête pas, la
-  fermer puis rappeler `SUPER + ALT + "` la relance.
+  fermer puis rappeler `SUPER + C` la relance.
 
 ## Validation des règles
 

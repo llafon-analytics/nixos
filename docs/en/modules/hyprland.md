@@ -62,10 +62,11 @@ notification.
 
 ## Docs and ChatGPT (Pyprland)
 
-`SUPER + ALT + é` shows or hides the repository documentation, `SUPER + ALT + "` ChatGPT.
+`SUPER + ALT + é` shows or hides the repository documentation, `SUPER + C` ChatGPT.
 Both are floating, workspace-independent Chromium app windows (`--app`) managed
-by Pyprland (classes `chromium-docs` and `chromium-chatgpt`, matched by class
-because Chromium shares one process per profile).
+by Pyprland (classes `chrome-127.0.0.1__-Default` and `chrome-chatgpt.com__-Default`,
+matched by class because Chromium shares one process per profile and derives
+the app_id from the URL itself).
 
 - **Docs**: the `docs-scratchpad` script (`hm/pyprland.nix`) runs `mkdocs serve`
   on `127.0.0.1:8765` (environment shared with `mkdocs.nix` through
@@ -77,7 +78,7 @@ because Chromium shares one process per profile).
 - **ChatGPT**: nixpkgs has no Linux app (the `chatgpt` attribute is the macOS
   app and does not evaluate on Linux), so the web app runs in a dedicated
   Chromium profile (`~/.local/state/pypr-chatgpt`) that keeps the session. Log
-  in once; hiding the window keeps it running, closing it and pressing `SUPER + ALT + "`
+  in once; hiding the window keeps it running, closing it and pressing `SUPER + C`
   again relaunches it.
 
 ## Validation

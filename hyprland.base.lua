@@ -87,7 +87,7 @@ hl.config({
   },
   -- Horizontal scrolling layout, opted into per workspace with SUPER+CTRL+S.
   scrolling = {
-    column_width = 0.5,
+    column_width = 1.0,
     fullscreen_on_one_column = true,
     focus_fit_method = 1,
     follow_focus = true,
@@ -196,15 +196,15 @@ hl.window_rule({ match = { class = "(clipse)" }, stay_focused = true })
 -- they survive a `hyprctl reload` that drops pyprland's runtime rules.
 hl.window_rule({ match = { class = "kitty-dropterm" }, float = true })
 hl.window_rule({ match = { class = "kitty-cheatsheet" }, float = true })
-hl.window_rule({ match = { class = "chromium-docs" }, float = true })
-hl.window_rule({ match = { class = "chromium-chatgpt" }, float = true })
+hl.window_rule({ match = { class = "chrome-127.0.0.1__-Default" }, float = true })
+hl.window_rule({ match = { class = "chrome-chatgpt.com__-Default" }, float = true })
 
 hl.bind("SUPER + V", hl.dsp.exec_cmd("kitty --class clipse -e clipse"))
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("kitty"))
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd("pypr toggle term"))
 hl.bind(mainMod .. " + ALT + ampersand", hl.dsp.exec_cmd("pypr toggle help"))
 hl.bind(mainMod .. " + ALT + eacute", hl.dsp.exec_cmd("pypr toggle docs"))
-hl.bind(mainMod .. " + ALT + quotedbl", hl.dsp.exec_cmd("pypr toggle chatgpt"))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("pypr toggle chatgpt"))
 hl.bind(mainMod .. " + Z", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + space", hl.dsp.global("caelestia:launcher"))
