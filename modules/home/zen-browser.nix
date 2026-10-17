@@ -52,8 +52,7 @@ in
         isDefault = true;
         # Read directly from the locked input. The module writes this content to
         # the profile through its native userChrome/userContent options.
-        userChrome = userChrome;
-        userContent = userContent;
+        inherit userChrome userContent;
         settings = {
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           # Firefox/Zen: 0 = dark, 1 = light, 2 = system, 3 = browser theme.

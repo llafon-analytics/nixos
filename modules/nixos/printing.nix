@@ -1,4 +1,4 @@
-{ ... }:
+_:
 
 {
   # Local, network (driverless IPP/AirPrint) and USB printing.

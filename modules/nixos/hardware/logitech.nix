@@ -5,5 +5,5 @@
   hardware.logitech.wireless.enable = true;
   hardware.logitech.wireless.enableGraphical = true;
   # TEMP-FIX(solaar-unstable): the stable 1.1.19 test suite fails in the sandbox.
-  nixpkgs.overlays = [ (final: prev: { solaar = pkgs-unstable.solaar; }) ];
+  nixpkgs.overlays = [ (_final: _prev: { inherit (pkgs-unstable) solaar; }) ];
 }
