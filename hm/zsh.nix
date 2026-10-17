@@ -58,7 +58,7 @@
     #   ];
     # };
     #initExtra = "[[ ! -f ~/.p10k.zsh ]] || source /etc/nixos/hm/p10k.zsh";
-    initExtra = "fastfetch";
+    initContent = "fastfetch";
 
   };
 }
