@@ -1,17 +1,19 @@
 # Overlays
 
-## `overlays/imagemagick-compat.nix`
+La liste est dans `overlays/default.nix` ; elle est appliquée au jeu de paquets du système, que
+Home Manager partage (`useGlobalPkgs`).
 
-Overlay appliqué globalement pour pinner `nixos-icons` et `imagemagick` sur une révision connue, afin d'éviter des crashs liés à Stylix/KDE.
+## `overlays/droidcam-transform-buffer.nix`
+
+Applique `overlays/patches/droidcam-transform-buffer.patch` à `droidcam` : corrige la fuite du
+buffer alloué par `tjTransform` à chaque image quand une rotation est active.
+Fix temporaire `droidcam-transform-buffer`.
 
 ## `inputs.millennium.overlays.default`
 
-Overlay appliqué globalement depuis l'input `millennium`. Il expose `pkgs.millennium-steam`, utilisé par `programs.steam.package`.
+Expose `pkgs.millennium-steam`, utilisé par `programs.steam.package`.
 
-## `overlays/resolve-no-multiarch.nix`
+## Overlay Solaar (`modules/nixos/hardware/logitech.nix`)
 
-Présent dans la repo mais non branché dans la flake actuelle. Sert à désactiver le multi-arch dans l'environnement FHS de `davinci-resolve`.
-
-## `overlays/rtl8852cu.nix`
-
-Présent dans la repo mais non branché dans la flake actuelle. Expose `rtl8852cu` pour plusieurs familles de kernel packages.
+Remplace `solaar` par la version d'unstable (la suite de tests de la version stable échoue dans le
+sandbox). Fix temporaire `solaar-unstable`.

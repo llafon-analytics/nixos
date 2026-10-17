@@ -2,21 +2,22 @@
 
 ## Organisation
 
-- Base partagée : `hyprland.base.lua`
-- Surcharge hôte : `wm-desktop/hyprland.lua` ou `wm-laptop/hyprland.lua`
-- Liaison Nix/Home Manager: `wm-desktop/wm.nix` et `wm-laptop/wm.nix`
+- Base partagée : `modules/home/hyprland/hyprland.base.lua`
+- Surcharge hôte : `hosts/desktop/hyprland.lua` ou `hosts/laptop/hyprland.lua`
+  (liée par `hosts/<host>/home.nix`)
+- Module Home Manager : `modules/home/hyprland/default.nix` (Hyprland, rofi, kitty)
 
-Les modules WM sélectionnent explicitement `configType = "lua"`. Les deux
+Le module sélectionne explicitement `configType = "lua"`. Les deux
 fragments sont déployés dans `$XDG_CONFIG_HOME/hypr` via `xdg.configFile`, puis
 chargés avec `require()` depuis le `hyprland.lua` généré par Home Manager.
 
 ## Outils liés
 
 - [Caelestia](caelestia.md) : barre, notifications, launcher, verrouillage et fond
-  d'écran (`hm/caelestia.nix`)
-- `hyprlock` + `hypridle` (hyprlock ne sert plus que de secours)
+  d'écran (`modules/home/caelestia.nix`), y compris la mise en veille (hypridle est désactivé)
+- `hyprlock` (secours uniquement)
 - `rofi` réduit au sélecteur de fenêtres (`SUPER+W`)
-- [Pyprland](#terminal-escamotable-pyprland) : terminal escamotable (`hm/pyprland.nix`)
+- [Pyprland](#terminal-escamotable-pyprland) : terminal escamotable (`modules/home/pyprland.nix`)
 
 ## Layout scrolling
 
@@ -44,7 +45,7 @@ premier appel puis conservé : la session shell et son état survivent entre deu
 affichages. Il flotte au-dessus du workspace courant, quel qu'il soit, sans
 retiler les autres fenêtres.
 
-- configuration : `~/.config/pypr/config.toml`, générée par `hm/pyprland.nix`
+- configuration : `~/.config/pypr/config.toml`, générée par `modules/home/pyprland.nix`
 - démon : service utilisateur `pyprland.service`, lié à `hyprland-session.target`
   (ne démarre pas sous Plasma)
 - diagnostic : `systemctl --user status pyprland`, `journalctl --user -u pyprland`
@@ -53,7 +54,7 @@ retiler les autres fenêtres.
 
 `SUPER + ALT + &` affiche ou masque l'aide-mémoire (raccourcis, commandes,
 nouveautés), rendu par `glow` dans un second scratchpad Pyprland (`q` pour le
-fermer). La source est `hm/cheatsheet.md` : la mettre à jour dans le même commit
+fermer). La source est `dotfiles/cheatsheet.md` : la mettre à jour dans le même commit
 qu'un nouveau raccourci ou outil, et y résumer les changements dans
 « Nouveautés ».
 
@@ -62,7 +63,6 @@ configuration » s'affiche une seule fois, à l'ouverture de session suivante
 (service utilisateur `cheatsheet-notify`). La version vue est mémorisée dans
 `~/.local/state/nixos-cheatsheet/seen` ; supprimer ce fichier rejoue la
 notification.
-- script de check des règles: `scripts/check-hyprland-rules.sh`
 
 ## Documentation et ChatGPT (Pyprland)
 
@@ -72,9 +72,9 @@ indépendantes du workspace, gérées par Pyprland (classes `chrome-127.0.0.1__-
 `chrome-chatgpt.com__-Default`, appariement par classe car Chromium partage un
 processus par profil et impose lui-même l'`app_id` à partir de l'URL).
 
-- **Documentation** : le script `docs-scratchpad` (`hm/pyprland.nix`) lance
-  `mkdocs serve` sur `127.0.0.1:8765` (environnement partagé avec `mkdocs.nix`
-  via `hm/mkdocs-env.nix`), attend le port, puis ouvre la fenêtre. Un verrou
+- **Documentation** : le script `docs-scratchpad` (`modules/home/pyprland.nix`) lance
+  `mkdocs serve` sur `127.0.0.1:8765` (environnement `pkgs/mkdocs-env`, partagé avec le
+  devShell), attend le port, puis ouvre la fenêtre. Un verrou
   `flock` évite les doublons ; fermer la fenêtre arrête le serveur. Les
   modifications de `docs/` sont rechargées automatiquement. Échec de démarrage :
   notification + `~/.local/state/pypr-docs/mkdocs.log`. Le dépôt doit se trouver
@@ -85,20 +85,20 @@ processus par profil et impose lui-même l'`app_id` à partir de l'URL).
   session. Se connecter une fois ; masquer la fenêtre ne l'arrête pas, la
   fermer puis rappeler `SUPER + C` la relance.
 
-## Validation des règles
+## Scripts liés aux raccourcis
+
+`mute-discord` (`SUPER + ;`) et `satty-shot` (`CTRL + Impr`) sont installés comme commandes par
+`modules/home/hyprland/scripts.nix` (sources dans `scripts/`), avec leurs dépendances.
+
+## Validation
+
+La syntaxe des trois fichiers Lua est vérifiée par le check `hyprland-lua` (en CI) :
 
 ```sh
-bash scripts/check-hyprland-rules.sh
+nix build .#checks.x86_64-linux.hyprland-lua
 ```
 
-Ce script valide les trois fragments avec `luac -p`. Il échoue aussi si une
-ancienne configuration Hyprlang contient :
-
-- `windowrulev2` est utilisé,
-- l'ancienne syntaxe de matcher est utilisée,
-- `stayfocused` est utilisé au lieu de `stay_focused`.
-
-Après la première activation de la migration :
+Après activation d'un changement :
 
 ```sh
 hyprctl reload full-reset

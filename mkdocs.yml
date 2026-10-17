@@ -1,7 +1,7 @@
 site_name: "NixOS Flake - Documentation"
 site_description: "Documentation de la configuration NixOS (desktop/laptop)"
-repo_url: "https://github.com/LAlto96/nixos"
-repo_name: "LAlto96/nixos"
+repo_url: "https://github.com/llafon-analytics/nixos"
+repo_name: "llafon-analytics/nixos"
 edit_uri: "edit/main/"
 
 theme:
@@ -47,8 +47,7 @@ nav:
           - Laptop: hosts/laptop.md
           - Ajouter un host: hosts/adding-a-host.md
       - Modules:
-          - common-modules.nix: modules/common-modules.md
-          - Configuration système: modules/system.md
+          - Modules système: modules/system.md
           - Home Manager: modules/home-manager.md
           - Paquets: modules/packages.md
           - Overlays: modules/overlays.md
@@ -67,12 +66,14 @@ nav:
           - Checks: development/checks.md
           - CI: development/ci.md
           - Conventions: development/conventions.md
+          - Agents IA: development/agents.md
           - Workflow documentation: development/documentation-workflow.md
       - Référence:
           - Aliases: reference/aliases.md
           - Ports: reference/ports.md
           - Groupes de paquets: reference/package-groups.md
           - Inputs flake: reference/inputs.md
+          - Fix temporaires: reference/temp-fixes.md
   - English:
       - Home: en/index.md
       - Getting started: en/getting-started.md
@@ -86,8 +87,7 @@ nav:
           - Laptop: en/hosts/laptop.md
           - Adding a host: en/hosts/adding-a-host.md
       - Modules:
-          - common-modules.nix: en/modules/common-modules.md
-          - System: en/modules/system.md
+          - System modules: en/modules/system.md
           - Home Manager: en/modules/home-manager.md
           - Packages: en/modules/packages.md
           - Overlays: en/modules/overlays.md
@@ -106,9 +106,11 @@ nav:
           - Checks: en/development/checks.md
           - CI: en/development/ci.md
           - Conventions: en/development/conventions.md
+          - AI agents: en/development/agents.md
           - Documentation workflow: en/development/documentation-workflow.md
       - Reference:
           - Aliases: en/reference/aliases.md
           - Ports: en/reference/ports.md
           - Package groups: en/reference/package-groups.md
           - Flake inputs: en/reference/inputs.md
+          - Temporary fixes: en/reference/temp-fixes.md

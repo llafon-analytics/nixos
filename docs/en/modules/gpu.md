@@ -1,12 +1,16 @@
 # GPU
 
-- `amdgpu.nix`: AMD driver stack + Vulkan/ROCm components.
-- `nvidiagpu.nix`: NVIDIA stack with open kernel module and beta package selection.
+- `modules/nixos/hardware/amdgpu.nix` (laptop): amdgpu in the initrd, RADV for Vulkan, ROCm OpenCL, 32-bit graphics.
+- `modules/nixos/hardware/nvidia.nix` (desktop): open kernel module, driver
+  `config.boot.kernelPackages.nvidiaPackages.production`, global `cudaSupport`. Every package that
+  supports CUDA is built with it, Home Manager included; the CPU-only exceptions are temporary
+  fixes (`thunderbird-onnx-cpu`, `obs-backgroundremoval-cpu`).
 
 ## Discord and Discord Canary NVENC
 
-The `desktop` host installs Discord and Discord Canary with Vencord through
-`packages/common.nix`. Both packages are wrapped so the clients start with
+Both hosts install Discord and Discord Canary with Vencord through
+`modules/nixos/packages/common.nix`, built by `pkgs/discord-nvenc` (patch script:
+`pkgs/discord-nvenc/patch-voice-engine.py`). Both packages are wrapped so the clients start with
 `/run/opengl-driver/lib` in
 `LD_LIBRARY_PATH`, exposing the NVIDIA libraries needed by the screen-sharing
 patch.
@@ -48,3 +52,7 @@ rm -rf ~/.config/discord/0.0.* ~/.config/discordcanary/1.0.*
 ```
 
 Adjust the version numbers if Discord has changed.
+
+Chromium hardware video decoding is disabled (`--disable-accelerated-video-decode`): through
+nvidia-vaapi-driver, received streams juddered. Temporary fixes `discord-nvenc-patch` and
+`discord-no-vaapi-decode`.

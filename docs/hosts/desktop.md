@@ -1,22 +1,24 @@
 # Host `desktop`
 
-## Imports
+## Imports (`hosts/desktop/default.nix`)
 
-- `hardware-configuration-desktop.nix`
-- `nvidiagpu.nix`
-- `packages/desktop.nix`
-- `drivers/rtw89.nix`
+- `hardware.nix`
+- `modules/nixos` (socle commun)
+- `modules/nixos/hardware/nvidia.nix`, `modules/nixos/hardware/rtw89.nix`
+- `modules/nixos/gaming/gamemode-optimizations.nix`
+- `modules/nixos/packages/desktop.nix`
+- module `nix-craftapps` (Photocraft)
 
 ## Particularités
 
-- SSH activé sur le port `2268`.
-- Docker + libvirtd + virt-manager activés.
-- `vm.swappiness = 60`.
-- Politique CPU NixOS normale hors jeu ; GameMode demande temporairement un profil de performance sans renice ni priorité d'E/S agressifs.
-- Kernel stable de la release NixOS sélectionnée.
-- SDDM + Plasma 6 + session par défaut `hyprland`.
-- Home Manager utilisateur: `desktop`.
-- Discord et Discord Canary patchés côté paquet Nix pour NVIDIA screen sharing.
+- Hostname `desktop`, utilisateur `desktop` (seul compte déclaré).
+- SSH sur le port `2268`, joignable uniquement via Tailscale.
+- Docker + libvirtd + virt-manager, `nvidia-container-toolkit`.
+- `vm.swappiness = 60`, TRIM hebdomadaire à travers LUKS.
+- `cudaSupport` global (voir [GPU](../modules/gpu.md)).
+- LACT (`lactd`) pour le monitoring/overclocking NVIDIA.
+- SDDM + Plasma 6, session par défaut `hyprland`, autologin.
+- Home Manager : `hosts/desktop/home.nix` (OBS avec CUDA, lazydocker, alias `valheim`, thème rofi Catppuccin).
 
 ## Mode jeu automatique
 
@@ -35,6 +37,9 @@ puis arrête `docker.service` et `docker.socket`. Le dernier client recharge la
 configuration Lua déclarative et restaure exactement les services et
 conteneurs mémorisés. Les états sont verrouillés et stockés séparément sous
 `/run/user/$UID` et `/run/gamemode-docker`.
+
+Les deux scripts sont dans `scripts/gamemode/` et empaquetés par
+`modules/nixos/gaming/gamemode-optimizations.nix` (`writeShellApplication`, vérifiés par shellcheck).
 
 Discord, EasyEffects, PipeWire/WirePlumber, Kitty, btop, Steam, Caelestia (barre et
 fond d'écran), Clipse, lactd, KDE Connect, Tailscale et libvirt restent actifs. Les
@@ -70,4 +75,5 @@ pour redevenir disponible, tout en conservant une borne finie.
 
 ## Firewall
 
-Les ports sont centralisés dans `hosts/desktop/ports.nix` et appliqués en TCP/UDP.
+Les ports sont listés dans `hosts/desktop/ports.nix` et ouverts en TCP/UDP **sur l'interface
+`tailscale0` uniquement**. Voir [Ports](../reference/ports.md).

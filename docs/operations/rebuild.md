@@ -1,6 +1,22 @@
 # Rebuild
 
-## Modes utiles
+## Avec `nh` (recommandé)
+
+`nh` connaît l'emplacement du dépôt (`~/Documents/nix-configuration`) et choisit la configuration
+d'après le hostname. Il affiche l'arbre de build et le diff des paquets avant activation.
+
+| Commande | Effet |
+|---|---|
+| `nh os switch` | applique immédiatement et met à jour le bootloader |
+| `nh os test` | applique jusqu'au prochain redémarrage |
+| `nh os boot` | applique au prochain démarrage |
+| `dupdate` / `lupdate` | `nh os switch --hostname desktop` (resp. `laptop`) `--show-trace` |
+
+!!! note "Premier rebuild après le passage aux hostnames `desktop` / `laptop`"
+    Tant que la machine s'appelle encore `nixos`, utiliser `dupdate` / `lupdate` (ou
+    `--hostname`), qui nomment la configuration explicitement.
+
+## Avec `nixos-rebuild`
 
 | Mode | Commande | Effet |
 |---|---|---|

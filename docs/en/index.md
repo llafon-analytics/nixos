@@ -1,23 +1,23 @@
 # NixOS configuration documentation
 
-Welcome to the documentation for the `LAlto96/nixos` repository.
+Welcome to the documentation of the `llafon-analytics/nixos` repository: the NixOS (flake)
+configuration of the `desktop` and `laptop` machines.
 
-## What you will find
+## What you will find here
 
-- **Architecture**: flake structure, modules, repository layout.
-- **Hosts**: differences between `desktop` and `laptop`, and how to add a new host.
-- **Modules**: system, Home Manager, packages, overlays, GPU, Hyprland, Stylix.
-- **Operations**: rebuild, flake updates, rollback, troubleshooting, Tailscale.
-- **Development**: checks, conventions, documentation maintenance.
-- **Reference**: shell aliases, open ports, package groups, flake inputs.
+- **Architecture**: flake, modules, repository layout.
+- **Hosts**: differences between `desktop` and `laptop`, adding a new host.
+- **Modules**: system, Home Manager, packages, overlays, GPU, Hyprland, Caelestia, Stylix.
+- **Operations**: rebuild, flake update, rollback, troubleshooting, Tailscale.
+- **Development**: checks, CI, conventions, AI agents, documentation.
+- **Reference**: aliases, ports, package groups, inputs, temporary fixes.
 
 ## Scope
 
-This documentation only covers behavior that exists in this repository.
+This documentation only describes what exists in the repository.
 
-> Incomplete areas are explicitly marked **To be completed**.
-
+> Incomplete sections are marked **To be completed**.
 
 ## Languages
 
-- Version française : [Documentation française](../index.md)
+- French version: [Documentation en français](../index.md)

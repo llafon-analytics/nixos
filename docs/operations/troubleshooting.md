@@ -5,19 +5,21 @@
 ```sh
 nix flake show
 nix flake check --no-build
-git status
+git status        # la flake ne voit que les fichiers suivis par git
 ```
 
-## Activer une trace détaillée
+## Trace détaillée
 
 ```sh
+nix eval --show-trace .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath
 sudo nixos-rebuild dry-activate --flake .#desktop --show-trace
 ```
 
-## Vérifier les règles Hyprland
+## Comparer deux états
 
 ```sh
-bash scripts/check-hyprland-rules.sh
+nix eval --raw .#nixosConfigurations.desktop.config.system.build.toplevel.drvPath   # avant / après
+nix run nixpkgs#nix-diff -- <ancien.drv> <nouveau.drv>
 ```
 
 ## Symptômes courants
@@ -25,6 +27,8 @@ bash scripts/check-hyprland-rules.sh
 | Symptôme | Vérification |
 |---|---|
 | Erreur flake | `nix flake check --no-build` |
-| Erreur host introuvable | `nix flake show` puis vérifier `nixosConfigurations` |
-| Problème Hyprland rules | script `check-hyprland-rules.sh` |
-| Réseau/Tailscale | `systemctl status tailscaled` puis `tailscale status` |
+| Fichier ajouté « introuvable » | `git add` le fichier (flake) |
+| Host introuvable | `nix flake show`, puis `flake/hosts.nix` |
+| Config Hyprland | `nix build .#checks.x86_64-linux.hyprland-lua`, `hyprctl configerrors` |
+| Service injoignable depuis une autre machine | il n'est ouvert que sur Tailscale : `tailscale status` |
+| Réseau / Tailscale | `systemctl status tailscaled` puis `tailscale status` |

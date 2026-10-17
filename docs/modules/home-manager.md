@@ -1,40 +1,31 @@
 # Home Manager
 
-## Entrées par host
+## Organisation
 
-- `home-desktop.nix`
-- `home-laptop.nix`
+- `modules/nixos/home-manager.nix` : intégration NixOS (`useGlobalPkgs = true`,
+  `useUserPackages = true`, sauvegarde `.backup`, modules HM de Zen et Caelestia).
+- `modules/home/common.nix` : tout ce que les deux utilisateurs partagent ; il importe
+  `caelestia.nix`, `zen-browser.nix`, `vscode.nix`, `zsh.nix`, `cli-tools.nix` (Atuin, zoxide,
+  Lazygit, nh), `pyprland.nix`, `neovim.nix`, `fastfetch.nix` et `hyprland/`.
+- `hosts/<host>/home.nix` : les différences propres à chaque host.
 
-## Modules partagés importés
-
-- `hm/caelestia.nix`
-- `hm/vscode.nix`
-- `hm/zsh.nix`
-- `hm/cli-tools.nix` (Atuin, zoxide, Lazygit, nh)
-- `hm/pyprland.nix` (scratchpads : terminal, aide-mémoire, documentation, ChatGPT)
-- `hm/neovim.nix`
-- un module WM (`wm-desktop/wm.nix` ou `wm-laptop/wm.nix`)
-
-Le module Home Manager amont de Caelestia est injecté globalement via
-`home-manager.sharedModules` dans `common-modules.nix`.
+Home Manager utilise le jeu de paquets du système : mêmes overlays, même `allowUnfree` et, sur le
+desktop, même `cudaSupport` (voir le fix temporaire `obs-backgroundremoval-cpu`).
 
 ## Fichiers déployés
 
-Les deux profils déploient notamment:
+`modules/home/common.nix` lie depuis `dotfiles/` : configs Doom Emacs, thèmes btop, CSS YouTube
+Music, `hyprlock`, le fond d'écran (`Pictures/Wallpapers`, lu par Caelestia) et `coc.lua` pour Neovim.
+Il installe aussi la commande `temp-fixes`.
 
-- configs Doom Emacs
-- configs btop
-- configs YouTube Music
-- `hypridle.conf` et `hyprlock`
-- le fond d'écran dans `Pictures/Wallpapers` (lu par Caelestia)
-
-La configuration de Caelestia (`~/.config/caelestia/{shell,cli}.json`) est générée
-par son module, pas déployée par `home.file`.
+La configuration de Caelestia (`~/.config/caelestia/{shell,cli}.json`) est générée par son module.
 
 ## Différences principales
 
 | Sujet | desktop | laptop |
 |---|---|---|
-| Package utilisateur spécifique | - | `moonlight-qt` |
-| Alias zsh host | `valheim` | `ac`, `bat` |
+| Paquets spécifiques | OBS Studio (CUDA) + plugins, lazydocker | `moonlight-qt` (unstable) |
+| Alias zsh | `valheim` | `ac`, `bat` |
 | Signature git | non forcée | `signing.format = openpgp` |
+| rofi | thème Catppuccin du dépôt | thème Stylix |
+| Config YouTube Music | `config-desktop.json` | `config.json` |

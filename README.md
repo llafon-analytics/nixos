@@ -1,38 +1,41 @@
 # NixOS configuration (flake)
 
-Configuration NixOS personnelle pour deux machines (`desktop` et `laptop`) avec Home Manager, Stylix et Hyprland.
+[![CI](https://github.com/llafon-analytics/nixos/actions/workflows/ci.yml/badge.svg)](https://github.com/llafon-analytics/nixos/actions/workflows/ci.yml)
+
+Configuration NixOS personnelle pour deux machines (`desktop` et `laptop`) avec Home Manager,
+Stylix, Hyprland et Caelestia.
+
+## Arborescence
+
+| Chemin | Contenu |
+|---|---|
+| `flake.nix`, `flake/`, `lib/` | inputs, sorties (flake-parts), fabrique des hosts |
+| `hosts/<host>/` | système, matériel, Home Manager et Hyprland propres à chaque machine |
+| `modules/nixos/`, `modules/home/` | modules partagés |
+| `pkgs/`, `overlays/`, `dotfiles/`, `scripts/` | paquets locaux, overlays, fichiers de config, scripts |
+| `temp-fixes.toml` | registre des fix temporaires |
+| `AGENTS.md` | consignes pour les agents IA |
+
+## Commandes usuelles
+
+```sh
+nix develop                      # outils : formatter, linters, nixd, temp-fixes, MkDocs
+nix fmt                          # formater et linter
+nix flake check --no-build       # évaluer les deux machines et les checks
+temp-fixes list                  # fix temporaires en cours
+
+nh os switch                     # reconstruire la machine courante
+sudo nixos-rebuild switch --flake .#desktop   # ou .#laptop
+```
 
 ## Documentation
 
-La documentation est maintenant structurée avec **MkDocs Material** et disponible en **français** et en **anglais**.
+Documentation MkDocs en **français** et en **anglais** :
 
-- Français: [`docs/index.md`](docs/index.md)
-- English: [`docs/en/index.md`](docs/en/index.md)
-
-### Lancer la doc en local
+- Français : [`docs/index.md`](docs/index.md)
+- English : [`docs/en/index.md`](docs/en/index.md)
 
 ```sh
-nix-shell mkdocs.nix --run "mkdocs serve"
-```
-
-### Construire la doc statique
-
-```sh
-nix-shell mkdocs.nix --run "mkdocs build"
-```
-
-## Commandes NixOS usuelles
-
-```sh
-# Prévisualiser les sorties de la flake
-nix flake show
-
-# Vérifier la flake sans build complet
-nix flake check --no-build
-
-# Appliquer la configuration desktop
-sudo nixos-rebuild switch --flake .#desktop
-
-# Appliquer la configuration laptop
-sudo nixos-rebuild switch --flake .#laptop
+nix develop -c mkdocs serve      # prévisualiser
+nix develop -c mkdocs build --strict
 ```

@@ -9,8 +9,8 @@ les notifications, le launcher, le verrouillage et le fond d'écran.
 | Emplacement | Rôle |
 |---|---|
 | `flake.nix` | input `caelestia-shell`, avec `inputs.nixpkgs.follows = "nixpkgs-unstable"` |
-| `common-modules.nix` | `inputs.caelestia-shell.homeManagerModules.default` dans `home-manager.sharedModules` |
-| `hm/caelestia.nix` | module partagé, importé par `home-desktop.nix` et `home-laptop.nix` |
+| `modules/nixos/home-manager.nix` | `inputs.caelestia-shell.homeManagerModules.default` dans `home-manager.sharedModules` |
+| `modules/home/caelestia.nix` | module partagé, importé par `modules/home/common.nix` |
 
 Le `follows` pointe sur `nixpkgs-unstable` et non sur `nixpkgs` : Caelestia se
 construit sur `quickshell` (git), qui suit nixos-unstable. Le forcer sur la 26.05
@@ -39,7 +39,7 @@ caelestia scheme set -n catppuccin -f latte -m light
     Hyprland, `btop.conf` et les séquences de couleurs du terminal à **chaque**
     changement de schéma — ce qui entre en collision avec les symlinks en lecture seule
     de Stylix. Tous les `cli.settings.theme.enable*` sont donc à `false` dans
-    `hm/caelestia.nix` : Caelestia ne théme que sa propre interface.
+    `modules/home/caelestia.nix` : Caelestia ne théme que sa propre interface.
 
     Contrôle de non-régression : `~/.config/gtk-3.0/gtk.css` et `~/.config/btop/btop.conf`
     doivent rester des symlinks vers `/nix/store`. Si l'un est devenu un fichier normal,
@@ -58,32 +58,27 @@ caelestia scheme set -n catppuccin -f latte -m light
 Les touches volume/luminosité restent sur `pamixer` / `brightnessctl` ; Caelestia
 affiche son OSD par-dessus.
 
-## Verrouillage
+## Verrouillage et mise en veille
 
-`hypridle.conf` utilise :
-
-```
-lock_cmd = if systemctl --user is-active --quiet caelestia; then caelestia shell lock lock; elif ! pidof hyprlock >/dev/null; then hyprlock; fi
-```
-
-Le verrou de Caelestia vit dans le process du shell : si celui-ci n'est pas lancé, la
-session ne doit pas rester déverrouillée, d'où le repli sur hyprlock (conservé, ainsi
-que `hm/hyprlock/`).
+Le démon idle de Caelestia (`general.idle` dans `modules/home/caelestia.nix`) est la seule
+source de vérité : il verrouille la session après inactivité et avant la mise en veille, sans
+éteindre les écrans. hypridle est désactivé (fix temporaire `hypridle-forced-off` : le module
+nixpkgs de hyprlock l'active d'office). hyprlock reste installé comme secours, avec sa config
+dans `dotfiles/hyprlock/`.
 
 !!! danger "Ne pas lancer hyprlock pendant que Caelestia tourne"
     Bug amont connu ([shell#988](https://github.com/caelestia-dots/shell/issues/988)) :
-    hyprlock fait crasher le shell. D'où le test explicite sur le service systemd plutôt
-    qu'un simple `caelestia ... || hyprlock` : un code de retour non nul de Caelestia ne
-    doit jamais déclencher hyprlock pendant que le shell tourne.
+    hyprlock fait crasher le shell. Ne l'utiliser que si `systemctl --user is-active caelestia`
+    indique que le shell ne tourne pas.
 
 Caelestia utilise son propre `pam.d/passwd` (`pam_faillock` + `pam_unix`) via
 `pam_start_confdir`, sans passer par `/etc/pam.d`. Si le déverrouillage échoue,
-ajouter `security.pam.services.caelestia = {};` dans `configuration.nix`.
+ajouter `security.pam.services.caelestia = {};` dans `modules/nixos/desktop/default.nix`.
 
 ## Fond d'écran
 
 `paths.wallpaperDir` pointe sur `~/Pictures/Wallpapers`, alimenté par `home.file`
-depuis `hm/wallpaper/`. Sélection initiale, une fois la session lancée :
+depuis `dotfiles/wallpaper/`. Sélection initiale, une fois la session lancée :
 
 ```sh
 caelestia wallpaper -f ~/Pictures/Wallpapers/wall3.png
