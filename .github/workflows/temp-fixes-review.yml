@@ -1,0 +1,58 @@
+name: Temporary fixes review
+
+on:
+  schedule:
+    - cron: "0 7 * * 1" # Mondays, 07:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TITLE: Revue des fix temporaires
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: accept-flake-config = true
+
+      # Keeps a single issue listing the fixes whose review date has passed.
+      # A comment is added when that list changes, so the review shows up in
+      # notifications; the issue is closed once nothing is overdue.
+      - name: Update the review issue
+        run: |
+          due="$(nix run .#temp-fixes -- due --format markdown)"
+          count="$(nix run .#temp-fixes -- due --format brief | grep -c . || true)"
+          issue="$(gh issue list --state open --search "in:title \"$TITLE\"" \
+            --json number,title --jq ".[] | select(.title == \"$TITLE\") | .number" | head -n1)"
+
+          if [ "$count" -eq 0 ]; then
+            if [ -n "$issue" ]; then
+              gh issue close "$issue" --comment "Plus aucun fix temporaire en retard de revue. 🎉"
+            fi
+            exit 0
+          fi
+
+          {
+            echo "Fix temporaires dont la date de revue est passée ($count)."
+            echo "Pour chacun : le retirer, ou mettre à jour \`review_after\` et \`history\` dans \`temp-fixes.toml\`."
+            echo "Un agent peut s'en charger (skill \`temp-fixes\`)."
+            echo
+            echo "$due"
+          } > "$RUNNER_TEMP/body.md"
+
+          gh label create temp-fixes --color FBCA04 --description "Revue des fix temporaires" --force
+          if [ -z "$issue" ]; then
+            gh issue create --title "$TITLE" --label temp-fixes --body-file "$RUNNER_TEMP/body.md"
+          else
+            current="$(gh issue view "$issue" --json body --jq .body)"
+            if [ "$current" != "$(cat "$RUNNER_TEMP/body.md")" ]; then
+              gh issue edit "$issue" --body-file "$RUNNER_TEMP/body.md"
+              gh issue comment "$issue" --body "Liste mise à jour : $count fix à revoir."
+            fi
+          fi

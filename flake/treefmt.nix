@@ -12,6 +12,8 @@
         deadnix.enable = true;
         statix.enable = true;
         shfmt.enable = true;
+        shellcheck.enable = true;
+        actionlint.enable = true;
         stylua = {
           enable = true;
           # Keep the existing style of the Hyprland config.
@@ -22,6 +24,7 @@
           };
         };
       };
+      settings.formatter.shellcheck.excludes = [ ".envrc" ];
       settings.global.excludes = [
         "dotfiles/**"
         "docs/**"

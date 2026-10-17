@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    name: Lint (format, temp-fixes, Lua)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: accept-flake-config = true
+      - name: Build the lightweight checks
+        run: >
+          nix build --print-build-logs --no-link
+          .#checks.x86_64-linux.treefmt
+          .#checks.x86_64-linux.temp-fixes-lint
+          .#checks.x86_64-linux.hyprland-lua
+
+  eval:
+    name: Evaluate both hosts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: accept-flake-config = true
+      # Evaluates every check, including the desktop and laptop toplevels,
+      # without building anything.
+      - run: nix flake check --no-build --show-trace
