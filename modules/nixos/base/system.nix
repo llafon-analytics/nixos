@@ -7,7 +7,6 @@
 
   services.dbus.enable = true;
   services.udisks2.enable = true;
-  services.logrotate.checkConfig = false;
 
   # Release the system was first installed with. Never bump it casually: it
   # pins stateful defaults (databases, data directories), not package versions.
