@@ -1,6 +1,36 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
+let
+  # The layer is injected into every Vulkan process; linking libstdc++ statically avoids
+  # "GLIBCXX_3.4.35 not found" when the host process already loaded an older libstdc++.
+  lsfgVkStatic = pkgs-unstable.lsfg-vk.overrideAttrs (old: {
+    cmakeFlags = old.cmakeFlags ++ [
+      "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc"
+    ];
+  });
+in
 {
+  # Fast-moving gaming packages come from unstable on purpose.
+  environment.systemPackages = [
+    pkgs.lutris
+  ]
+  ++ (with pkgs-unstable; [
+    winetricks
+    dosbox-staging
+    wineWow64Packages.waylandFull
+    radeontop
+    gamescope
+    prismlauncher
+    mangohud
+    heroic
+    protonup-qt
+    protontricks
+    gwe
+    lsfgVkStatic
+    lsfg-vk-ui
+    steamtinkerlaunch
+  ]);
+
   programs.steam = {
     enable = true;
     package = pkgs.millennium-steam;
