@@ -1,23 +1,27 @@
 # GPU
 
-## `amdgpu.nix`
+## `modules/nixos/hardware/amdgpu.nix` (laptop)
 
 - Charge `amdgpu` en initrd.
 - Définit `services.xserver.videoDrivers = [ "amdgpu" ]`.
 - Active la stack graphics 32 bits.
 - Ajoute des composants Vulkan/ROCm.
 
-## `nvidiagpu.nix`
+## `modules/nixos/hardware/nvidia.nix` (desktop)
 
 - Active `cudaSupport`.
 - Définit `services.xserver.videoDrivers = [ "nvidia" ]`.
 - `hardware.nvidia.open = true`.
-- Pilote choisi: `config.boot.kernelPackages.nvidiaPackages.beta`.
+- Pilote : `config.boot.kernelPackages.nvidiaPackages.production` (branche production de nixpkgs).
+- `cudaSupport` est global : tout paquet qui le supporte est construit avec CUDA, y compris côté
+  Home Manager. Les exceptions CPU sont des fix temporaires (`thunderbird-onnx-cpu`,
+  `obs-backgroundremoval-cpu`).
 
 ## Discord et Discord Canary NVENC
 
-Le host `desktop` installe Discord et Discord Canary avec Vencord via
-`packages/common.nix`. Les paquets sont enveloppés pour lancer les clients avec
+Les deux hosts installent Discord et Discord Canary avec Vencord via
+`modules/nixos/packages/common.nix`, construits par `pkgs/discord-nvenc` (script de patch :
+`pkgs/discord-nvenc/patch-voice-engine.py`). Les paquets sont enveloppés pour lancer les clients avec
 `/run/opengl-driver/lib` dans
 `LD_LIBRARY_PATH`, ce qui expose les bibliothèques NVIDIA attendues par le patch
 de partage d'écran.
@@ -60,6 +64,6 @@ rm -rf ~/.config/discord/0.0.* ~/.config/discordcanary/1.0.*
 
 Adapter les numéros si Discord a changé de version.
 
-## Remarque
-
-Le host `laptop` importe `amdgpu.nix`, le host `desktop` importe `nvidiagpu.nix`.
+Le décodage vidéo matériel de Chromium est désactivé (`--disable-accelerated-video-decode`) : via
+nvidia-vaapi-driver, les streams reçus saccadaient. Fix temporaires `discord-nvenc-patch` et
+`discord-no-vaapi-decode`.

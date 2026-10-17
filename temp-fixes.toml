@@ -1,0 +1,173 @@
+# Registre des fix temporaires
+#
+# Chaque contournement (paquet épinglé, overlay, option forcée, patch...) a une
+# entrée ici ET un commentaire `TEMP-FIX(<id>)` à côté du code concerné.
+# `temp-fixes lint` vérifie la cohérence des deux ; la CI le lance à chaque push.
+#
+# Champs : voir docs/reference/temp-fixes.md.
+#   removal_test : commande lancée depuis la racine du dépôt qui RÉUSSIT quand le
+#                  contournement n'est plus nécessaire (`temp-fixes check`).
+#   history      : une ligne par revue/décision, la plus récente en dernier.
+
+[[fix]]
+id = "solaar-unstable"
+title = "Solaar pris sur nixpkgs-unstable"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["modules/nixos/hardware/logitech.nix"]
+reason = "La suite de tests de solaar 1.1.19 (nixos-26.05) échoue dans le sandbox de build."
+removal_condition = "Le solaar de la branche stable construit (tests corrigés ou version plus récente)."
+removal_test = "nix build --no-link --inputs-from . nixpkgs#solaar"
+added = 2026-10-17
+review_after = 2026-11-28
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "nvidia-driver-pin"
+title = "Pilote NVIDIA 595.71.05 figé à la main (mkDriver)"
+status = "resolved"
+hosts = ["desktop"]
+files = ["modules/nixos/hardware/nvidia.nix"]
+reason = "Pilote plus récent que ceux fournis par nixpkgs au moment du changement de noyau (juillet 2026)."
+removal_condition = "nvidiaPackages.production (ou latest) de nixpkgs fournit une version ≥ 595.71.05."
+removal_test = "v=$(nix eval --raw .#nixosConfigurations.desktop.config.boot.kernelPackages.nvidiaPackages.production.version) && [ \"$(printf '%s\\n' 595.71.05 \"$v\" | sort -V | head -n1)\" = 595.71.05 ]"
+added = 2026-07-02
+review_after = 2026-11-28
+resolved = 2026-10-17
+history = ["2026-10-17 : entrée créée lors de l'audit.", "2026-10-17 : résolu, nvidiaPackages.production fournit 595.71.05 (removal_test au vert)."]
+
+[[fix]]
+id = "hypridle-forced-off"
+title = "hypridle forcé à off (mkForce)"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["modules/nixos/desktop/default.nix"]
+reason = "Le module nixpkgs de hyprlock active services.hypridle sans condition, alors que Caelestia gère la mise en veille."
+removal_condition = "Le module programs.hyprlock de nixpkgs n'active plus hypridle d'office."
+removal_test = "! grep -q hypridle \"$(nix eval --raw --impure --expr '(builtins.getFlake (toString ./.)).inputs.nixpkgs.outPath')/nixos/modules/programs/wayland/hyprlock.nix\""
+added = 2026-08-08
+review_after = 2027-01-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "stylix-kde-activation"
+title = "Activation « look-and-feel » KDE de Stylix neutralisée"
+status = "active"
+hosts = ["desktop"]
+files = ["hosts/desktop/home.nix"]
+reason = "L'activation a besoin d'une session Plasma : au démarrage elle échoue (xcb_connect) et coûte ~0,8 s sur le chemin critique."
+removal_condition = "Stylix ne lance plus cette activation hors session Plasma (ou échoue sans délai). À appliquer aussi au laptop si on garde le contournement."
+added = 2026-10-15
+review_after = 2026-12-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "discord-nvenc-patch"
+title = "Patch du moteur vocal de Discord pour l'encodage NVENC"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["pkgs/discord-nvenc/package.nix"]
+reason = "Le partage d'écran de Discord sous Linux n'utilise pas NVENC ; le patch active linux-nvenc, useCaptureDeviceForEncode et linux-vulkan."
+removal_condition = "Discord active nativement l'encodage matériel NVIDIA sous Linux (ou le patch ne s'applique plus : replace_once échoue au build)."
+added = 2026-05-25
+review_after = 2026-12-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "discord-no-vaapi-decode"
+title = "Décodage vidéo matériel désactivé dans Discord"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["pkgs/discord-nvenc/package.nix"]
+reason = "Les streams Go Live reçus saccadent via le décodage VAAPI de Chromium (nvidia-vaapi-driver)."
+removal_condition = "nvidia-vaapi-driver / Chromium décodent sans saccade (tester un stream reçu sans le flag)."
+added = 2026-10-16
+review_after = 2026-12-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "lsfg-vk-static-libstdcxx"
+title = "lsfg-vk lié statiquement à libstdc++"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["modules/nixos/gaming/default.nix"]
+reason = "La couche Vulkan est injectée dans tous les processus ; « GLIBCXX_3.4.35 not found » quand l'hôte a déjà chargé une libstdc++ plus ancienne."
+removal_condition = "nixpkgs (ou upstream) lie lsfg-vk statiquement, ou les jeux concernés ne chargent plus de libstdc++ ancienne."
+added = 2026-10-16
+review_after = 2026-12-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "droidcam-transform-buffer"
+title = "Patch de fuite mémoire tjTransform dans droidcam"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["overlays/droidcam-transform-buffer.nix"]
+reason = "process_frame() perd le buffer alloué par tjTransform à chaque image quand une rotation est active."
+removal_condition = "Le correctif est intégré dans droidcam upstream / nixpkgs (le patch ne s'applique plus)."
+added = 2026-10-15
+review_after = 2027-01-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "thunderbird-onnx-cpu"
+title = "onnxruntime de Thunderbird sans CUDA"
+status = "active"
+hosts = ["desktop"]
+files = ["modules/nixos/packages/common.nix"]
+reason = "cudaSupport global (desktop) ferait compiler onnxruntime avec CUDA pour Thunderbird, long et inutile."
+removal_condition = "cudaSupport n'est plus activé globalement, ou Thunderbird n'utilise plus onnxruntime."
+added = 2026-07-11
+review_after = 2027-04-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "crosspipe-unstable"
+title = "crosspipe pris sur nixpkgs-unstable"
+status = "resolved"
+hosts = ["desktop", "laptop"]
+files = ["modules/nixos/packages/common.nix"]
+reason = "crosspipe n'existe pas dans la branche stable."
+removal_condition = "crosspipe est disponible dans la branche stable de nixpkgs."
+removal_test = "nix eval --inputs-from . nixpkgs#crosspipe.version"
+added = 2026-03-08
+review_after = 2026-11-28
+resolved = 2026-10-17
+history = ["2026-10-17 : entrée créée lors de l'audit.", "2026-10-17 : résolu, crosspipe 0.1.1 est dans nixos-26.05 (removal_test au vert)."]
+
+[[fix]]
+id = "caelestia-latte-palette"
+title = "Palette Catppuccin Latte de caelestia-cli corrigée"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["modules/home/caelestia.nix"]
+reason = "Le schéma catppuccin/latte livré par caelestia-cli est un remix Material You (le « pink » y est bleu) ; le fichier light.txt est réécrit avec la vraie palette et un accent rose."
+removal_condition = "caelestia-cli livre la palette Catppuccin officielle (ou le remplacement échoue au build parce que light.txt a changé)."
+added = 2026-08-08
+review_after = 2026-12-15
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "rtw89-out-of-tree"
+title = "Pilote Wi-Fi rtw89 hors arbre (morrownr) pour la clé TP-Link TXE70UH"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["modules/nixos/hardware/rtw89.nix"]
+reason = "La puce RTL8852CU (USB) n'est pas prise en charge par le rtw89 du noyau utilisé."
+removal_condition = "Le noyau de nixpkgs fournit un module rtw89_8852cu (vérifier aussi que la clé fonctionne sans le firmware morrownr)."
+removal_test = "find \"$(nix build --no-link --print-out-paths .#nixosConfigurations.laptop.config.boot.kernelPackages.kernel.modules)\" -name 'rtw89_8852cu*' | grep -q ."
+added = 2025-12-25
+review_after = 2026-11-28
+history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "obs-backgroundremoval-cpu"
+title = "Plugin OBS de détourage sans CUDA"
+status = "active"
+hosts = ["desktop"]
+files = ["hosts/desktop/home.nix"]
+reason = "Avec useGlobalPkgs, cudaSupport (global sur le desktop) ferait compiler onnxruntime, OpenCV, cuDNN et NCCL avec CUDA pour ce seul plugin (plusieurs heures, absent du cache)."
+removal_condition = "Le cache binaire fournit ces dépendances en version CUDA, ou on accepte la compilation pour profiter du détourage sur GPU."
+added = 2026-10-17
+review_after = 2027-04-15
+history = ["2026-10-17 : créé en passant Home Manager à useGlobalPkgs (le plugin était jusque-là construit sans CUDA)."]

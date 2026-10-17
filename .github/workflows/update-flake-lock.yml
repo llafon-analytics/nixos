@@ -1,0 +1,72 @@
+name: Update flake.lock
+
+on:
+  schedule:
+    - cron: "0 4 * * 1" # Mondays, 04:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: accept-flake-config = true
+
+      - name: Package versions before the update
+        run: >
+          nix eval --json --impure
+          --expr 'import ./scripts/ci/package-versions.nix { flake = builtins.getFlake (toString ./.); }'
+          > "$RUNNER_TEMP/before.json"
+
+      # A PR opened with the default GITHUB_TOKEN does not trigger the CI
+      # workflow. Add a FLAKE_UPDATE_TOKEN secret (fine-grained PAT: contents +
+      # pull requests) to get the CI checks on it; the evaluation below runs
+      # either way.
+      - name: Update flake.lock and open a pull request
+        id: update
+        uses: DeterminateSystems/update-flake-lock@v29
+        with:
+          token: ${{ secrets.FLAKE_UPDATE_TOKEN || github.token }}
+          pr-title: "chore(flake): update flake.lock"
+          commit-msg: "chore(flake): update flake.lock"
+          pr-labels: dependencies
+
+      - name: Evaluate both hosts
+        if: steps.update.outputs.pull-request-number != ''
+        # `nix eval` first realises Stylix's import-from-derivation (see ci.yml).
+        run: |
+          for host in desktop laptop; do
+            nix eval --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath"
+            echo
+          done
+          nix flake check --no-build
+
+      - name: Summarise versions and temporary fixes
+        if: steps.update.outputs.pull-request-number != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ steps.update.outputs.pull-request-number }}
+        run: |
+          nix eval --json --impure \
+            --expr 'import ./scripts/ci/package-versions.nix { flake = builtins.getFlake (toString ./.); }' \
+            > "$RUNNER_TEMP/after.json"
+          {
+            echo "## Versions"
+            echo
+            scripts/ci/version-diff.sh "$RUNNER_TEMP/before.json" "$RUNNER_TEMP/after.json"
+            echo
+            echo "## Fix temporaires à re-tester"
+            echo
+            echo "Tests de retrait (\`temp-fixes check --all\`) avec le nouveau lock :"
+            echo
+            echo '```'
+            nix run .#temp-fixes -- check --all 2>&1 || true
+            echo '```'
+          } > "$RUNNER_TEMP/comment.md"
+          gh pr comment "$PR" --body-file "$RUNNER_TEMP/comment.md"

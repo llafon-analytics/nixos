@@ -1,0 +1,28 @@
+name: Build laptop
+
+# Full build of the laptop system, to catch build failures that evaluation
+# cannot see (typically after a flake.lock update). The desktop (CUDA,
+# DaVinci Resolve, custom kernel modules) is too large for a hosted runner.
+on:
+  pull_request:
+    paths: [flake.lock]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+    continue-on-error: true
+    steps:
+      - name: Free disk space for /nix
+        uses: wimpysworld/nothing-but-nix@v10
+      - uses: actions/checkout@v7
+      - uses: cachix/install-nix-action@v31
+        with:
+          extra_nix_config: accept-flake-config = true
+      - run: >
+          nix build --print-build-logs --no-link
+          .#nixosConfigurations.laptop.config.system.build.toplevel

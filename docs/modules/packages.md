@@ -1,29 +1,38 @@
-# Modules paquets
+# Paquets
 
-## `packages/common.nix`
+## Paquets communs (`modules/nixos/packages/common.nix`)
 
-- Active Java, Steam et Gamescope.
-- Remplace le package Steam par `pkgs.millennium-steam`.
-- Construit `environment.systemPackages` à partir de groupes `pkgs2_*`.
-- Ajoute `unstableGamingPkgs` depuis `pkgs-unstable` pour les exceptions gaming rapides.
-- Ajoute `unstableCompatibilityPkgs` depuis `pkgs-unstable` pour les paquets absents de stable.
+Les paquets sont rangés dans des groupes nommés, concaténés dans `environment.systemPackages` :
+`development`, `terminal`, `system`, `internet`, `office`, `multimedia`, `android`, `desktop`,
+`archives`, `virtualisation`, `fun`. Voir [Groupes de paquets](../reference/package-groups.md).
 
-## `packages/desktop.nix`
+Discord et Discord Canary (Vencord) viennent de `pkgs-unstable` et sont patchés par
+`pkgs/discord-nvenc` (voir [GPU](gpu.md)).
 
-Ajoute des paquets orientés desktop:
+## Jeux (`modules/nixos/gaming/default.nix`)
 
-- audio/prod (`reaper`, `yabridge`)
-- vidéo (`davinci-resolve`)
-- virtualisation (`quickemu`)
-- bench/OC (`phoronix-test-suite`)
-- outils Steam/gaming (`sgdboop` depuis stable, `alvr` et `nvidia_oc` depuis unstable)
+Steam (paquet Millennium), Gamescope, GameMode, Lutris et une liste d'outils pris volontairement
+sur `pkgs-unstable` (Wine, Proton, MangoHud, Heroic, PrismLauncher, lsfg-vk…).
 
-## Policy paquets
+## Paquets par host
 
-- Ajouter un paquet dans une liste `with pkgs; [...]` par défaut.
-- Utiliser `pkgs-unstable` seulement quand le paquet est absent de stable ou doit suivre un rythme plus rapide.
-- Regrouper chaque exception unstable dans une liste nommée qui explique la raison (`unstableGamingPkgs`, `unstableCompatibilityPkgs`, `unstableGamingDesktopPkgs`).
+- `modules/nixos/packages/desktop.nix` : audio (`reaper`, `yabridge`), vidéo (`davinci-resolve`),
+  `quickemu`, `phoronix-test-suite`, `sgdboop`, et `alvr` / `nvidia_oc` depuis unstable.
+- `modules/nixos/packages/laptop.nix` : `powertop`, `radeontop`.
 
-## `packages/laptop.nix`
+## Paquets locaux (`pkgs/`)
 
-Ajoute `powertop`.
+| Paquet | Rôle |
+|---|---|
+| `discord-nvenc` | Discord patché pour l'encodage NVENC |
+| `opennow` | client GeForce NOW (AppImage) |
+| `rtw89`, `rtw89-firmware` | pilote Wi-Fi hors arbre et firmware |
+| `temp-fixes` | CLI du registre des fix temporaires |
+| `mkdocs-env` | environnement Python de la documentation |
+
+## Politique
+
+- `pkgs` (stable) par défaut.
+- `pkgs-unstable` seulement pour une exception nommée : paquet absent de stable ou qui doit suivre
+  l'amont. Si c'est un contournement (stable cassé…), l'inscrire dans le
+  [registre des fix temporaires](../reference/temp-fixes.md).

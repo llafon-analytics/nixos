@@ -1,30 +1,29 @@
 # Flake
 
-## Inputs principaux
+`flake.nix` ne déclare que les **inputs** et délègue les sorties à
+[flake-parts](https://flake.parts) :
 
-La flake déclare notamment:
+| Fichier | Sorties |
+|---|---|
+| `flake/hosts.nix` | `nixosConfigurations.{desktop,laptop}` via `lib/mkHost.nix` |
+| `flake/packages.nix` | `packages.x86_64-linux.{temp-fixes,mkdocs-env,opennow}` |
+| `flake/checks.nix` | `checks.x86_64-linux.{desktop,laptop,temp-fixes-lint,hyprland-lua}` |
+| `flake/treefmt.nix` | `formatter` (`nix fmt`) et `checks.x86_64-linux.treefmt` |
+| `flake/devshell.nix` | `devShells.x86_64-linux.default` (`nix develop`) |
 
-- `nixpkgs` (canal stable principal, branche `nixos-26.05`)
-- `nixpkgs-unstable` (exceptions explicites)
-- `home-manager` (branche `release-26.05`, suit `nixpkgs`)
-- `stylix` (branche `release-26.05`)
-- `zen-browser`
-- `pipewire-screenaudio`
-- `codex-cli-nix`
+## `lib/mkHost.nix`
 
-Voir aussi la page [Inputs](../reference/inputs.md).
+Construit `nixpkgs.lib.nixosSystem` pour `hosts/<nom>` et passe en `specialArgs` :
 
-## Outputs utilisés
+- `inputs` : tous les inputs de la flake ;
+- `pkgs-unstable` : `nixpkgs-unstable` instancié avec `allowUnfree`.
 
-- `nixosConfigurations.desktop`
-- `nixosConfigurations.laptop`
-- `overlays.imagemagick-compat`
-- `checks.x86_64-linux.hyprland-rules`
+Home Manager reçoit les mêmes arguments (`home-manager.extraSpecialArgs`) et utilise le jeu de
+paquets du système (`useGlobalPkgs = true`).
 
-## Spécificités
+## Politique stable / unstable
 
-- `nixpkgs` est le canal stable par défaut.
-- `desktop` et `laptop` reçoivent `pkgs-unstable` dans `specialArgs` pour les paquets rapides explicitement sélectionnés.
-- Les modules Home Manager reçoivent aussi `pkgs-unstable` via `home-manager.extraSpecialArgs`.
-- Les paquets doivent venir de `pkgs` par défaut; les exceptions depuis `pkgs-unstable` restent regroupées dans des listes explicites (`unstableGamingPkgs`, `unstableCompatibilityPkgs`, etc.).
-- Les deux hosts utilisent `commonModules` puis ajoutent leur module host.
+- `nixpkgs` (`nixos-26.05`) est la base ; `home-manager` et `stylix` suivent la même release.
+- `pkgs-unstable` est réservé à des exceptions nommées (paquets gaming rapides, Discord…).
+
+Voir aussi [Inputs](../reference/inputs.md).

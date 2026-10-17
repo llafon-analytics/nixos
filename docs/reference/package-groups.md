@@ -1,40 +1,24 @@
 # Groupes de paquets
 
-`packages/common.nix` regroupe les paquets par listes `pkgs2_*`.
+`modules/nixos/packages/common.nix` range les paquets communs dans des groupes nommés.
 
-## Vue rapide
-
-| Groupe | Thème |
+| Groupe | Contenu |
 |---|---|
-| `pkgs2_0` | base utilitaires/audio |
-| `pkgs2_1` | productivité/multimédia |
-| `pkgs2_2` | thème GTK |
-| `pkgs2_3` | clipboard/spell |
-| `pkgs2_6` | éditeurs |
-| `pkgs2_7` | outils terminal/système |
-| `pkgs2_8` | calculatrices |
-| `pkgs2_9` | caméra/archives |
-| `pkgs2_10` | vidéo |
-| `pkgs2_11` | virtualisation |
-| `pkgs2_12` | PDF/TeX |
-| `pkgs2_13` | monitoring |
-| `pkgs2_14` | réseau/dev |
-| `pkgs2_15` | navigateurs |
-| `pkgs2_16` | communication |
-| `pkgs2_17` | conversion docs |
-| `pkgs2_18` | téléchargement |
-| `pkgs2_19` | finance |
-| `pkgs2_20` | Python/env |
-| `pkgs2_21` | médias/audio |
-| `pkgs2_22` | compression |
-| `pkgs2_23` | utilitaires divers |
-| `pkgs2_25` | captures d'écran (`hyprshot`, `grim`, `slurp`, `satty`) |
-| `pkgs2_26` | luminosité |
-| `pkgs2_28` | outils Xorg |
-| `unstableGamingPkgs` | exceptions gaming depuis `pkgs-unstable` |
-| `unstableCompatibilityPkgs` | exceptions absentes de stable depuis `pkgs-unstable` |
+| `development` | git, gh, Codex, Claude Code, nodejs, jq, clang, emacs, postman, docker-compose, conda, uv |
+| `terminal` | kitty, coreutils, ripgrep, fd, fastfetch, w3m, xxd, steam-run |
+| `system` | usbutils, btop, lm_sensors, mission-center, s-tui, disques, outils Wi-Fi, speedtest |
+| `internet` | ungoogled-chromium, Thunderbird, Discord (+ Canary), Proton VPN/Pass, nzbget, motrix, wget |
+| `office` | OnlyOffice, zathura, TeX Live, poppler, glow, pandoc, ispell, calculatrices, ledger |
+| `multimedia` | OpenNOW, mpv, yt-dlp, audacity, outils PipeWire (pavucontrol, easyeffects, qpwgraph, crosspipe), GIMP, upscayl, ffmpeg |
+| `android` | android-tools, scrcpy, droidcam |
+| `desktop` | presse-papiers, captures d'écran, luminosité, outils X11, thème GTK Catppuccin |
+| `archives` | zip, unzip, 7-Zip, unrar, atool |
+| `virtualisation` | qemu |
+| `fun` | pipes, cbonsai, cmatrix, cava |
 
-## Paquets spécifiques host
+## Ailleurs
 
-- `packages/desktop.nix` : groupes `pkgs3_*` et `unstableGamingDesktopPkgs`.
-- `packages/laptop.nix` : `powertop`.
+- `modules/nixos/gaming/default.nix` : Lutris (stable) et les outils de jeu depuis unstable.
+- `modules/nixos/packages/desktop.nix` : groupes `audio`, `video`, `virtualisation`, `benchmarks`,
+  `steam`, `unstable` (`alvr`, `nvidia_oc`).
+- `modules/nixos/packages/laptop.nix` : `powertop`, `radeontop`.

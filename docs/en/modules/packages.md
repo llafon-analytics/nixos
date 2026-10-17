@@ -1,29 +1,38 @@
-# Package modules
+# Packages
 
-## `packages/common.nix`
+## Shared packages (`modules/nixos/packages/common.nix`)
 
-- Enables Java, Steam, and Gamescope.
-- Replaces the Steam package with `pkgs.millennium-steam`.
-- Builds `environment.systemPackages` from `pkgs2_*` groups.
-- Adds `unstableGamingPkgs` from `pkgs-unstable` for fast-moving gaming exceptions.
-- Adds `unstableCompatibilityPkgs` from `pkgs-unstable` for packages missing from stable.
+Packages are sorted into named groups, concatenated into `environment.systemPackages`:
+`development`, `terminal`, `system`, `internet`, `office`, `multimedia`, `android`, `desktop`,
+`archives`, `virtualisation`, `fun`. See [Package groups](../reference/package-groups.md).
 
-## `packages/desktop.nix`
+Discord and Discord Canary (Vencord) come from `pkgs-unstable` and are patched by
+`pkgs/discord-nvenc` (see [GPU](gpu.md)).
 
-Adds desktop-focused packages:
+## Gaming (`modules/nixos/gaming/default.nix`)
 
-- audio/production (`reaper`, `yabridge`)
-- video (`davinci-resolve`)
-- virtualization (`quickemu`)
-- benchmark/overclocking (`phoronix-test-suite`)
-- Steam/gaming utilities (`sgdboop` from stable, `alvr` and `nvidia_oc` from unstable)
+Steam (Millennium package), Gamescope, GameMode, Lutris and a list of tools deliberately taken from
+`pkgs-unstable` (Wine, Proton, MangoHud, Heroic, PrismLauncher, lsfg-vk…).
 
-## `packages/laptop.nix`
+## Per-host packages
 
-Adds `powertop`.
+- `modules/nixos/packages/desktop.nix`: audio (`reaper`, `yabridge`), video (`davinci-resolve`),
+  `quickemu`, `phoronix-test-suite`, `sgdboop`, and `alvr` / `nvidia_oc` from unstable.
+- `modules/nixos/packages/laptop.nix`: `powertop`, `radeontop`.
 
-## Package Policy
+## Local packages (`pkgs/`)
 
-- Add packages to a `with pkgs; [...]` list by default.
-- Use `pkgs-unstable` only when a package is missing from stable or needs a faster-moving branch.
-- Keep every unstable exception in a named list that explains the reason (`unstableGamingPkgs`, `unstableCompatibilityPkgs`, `unstableGamingDesktopPkgs`).
+| Package | Role |
+|---|---|
+| `discord-nvenc` | Discord patched for NVENC encoding |
+| `opennow` | GeForce NOW client (AppImage) |
+| `rtw89`, `rtw89-firmware` | out-of-tree Wi-Fi driver and firmware |
+| `temp-fixes` | CLI for the temporary-fix registry |
+| `mkdocs-env` | Python environment for the documentation |
+
+## Policy
+
+- `pkgs` (stable) by default.
+- `pkgs-unstable` only for a named exception: package missing from stable or that must follow
+  upstream. If it is a workaround (stable broken…), record it in the
+  [temporary-fix registry](../reference/temp-fixes.md).

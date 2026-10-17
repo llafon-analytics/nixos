@@ -1,31 +1,32 @@
 # Vue d'ensemble
 
-La flake expose deux configurations NixOS:
-
-- `desktop`
-- `laptop`
-
-Les deux hosts partagent un socle commun (`common-modules.nix` + `configuration.nix`) puis ajoutent leurs modules spécifiques (GPU, paquets, services).
+La flake expose deux configurations NixOS, `desktop` et `laptop`, construites par la même fabrique
+(`lib/mkHost.nix`). Chaque host importe le socle commun (`modules/nixos`) puis ajoute son matériel,
+son utilisateur et ses modules propres.
 
 ```mermaid
 flowchart TD
-  A[flake.nix] --> B[common-modules.nix]
-  B --> C[configuration.nix]
-  B --> D[stylix.nixosModules.stylix]
-  B --> E[home-manager.nixosModules.home-manager]
+  F[flake.nix] --> P[flake/*.nix<br/>flake-parts]
+  P --> MK[lib/mkHost.nix]
+  MK --> HD[hosts/desktop]
+  MK --> HL[hosts/laptop]
 
-  A --> F[hosts/desktop/default.nix]
-  A --> G[hosts/laptop/default.nix]
+  HD --> MN[modules/nixos<br/>socle commun]
+  HL --> MN
+  HD --> HWD[matériel desktop<br/>nvidia, rtw89, gamemode]
+  HL --> HWL[matériel laptop<br/>amdgpu, tlp, rtw89]
 
-  F --> H[home-desktop.nix]
-  G --> I[home-laptop.nix]
-
-  H --> J[wm-desktop/wm.nix]
-  I --> K[wm-laptop/wm.nix]
+  HD --> HMD[hosts/desktop/home.nix]
+  HL --> HML[hosts/laptop/home.nix]
+  HMD --> MH[modules/home/common.nix]
+  HML --> MH
 ```
 
 ## Principes
 
-1. **Base commune**: boot, réseau, sécurité, audio, services partagés.
-2. **Spécificité par machine**: GPU, virtualisation, firewall, tuning.
-3. **Session utilisateur**: Home Manager + configuration WM.
+1. **Socle commun** (`modules/nixos`) : boot, Nix, locale, réseau, bureau, impression, jeux, paquets.
+2. **Spécificités par machine** (`hosts/<host>`) : matériel, utilisateur, ports, services propres.
+3. **Session utilisateur** : Home Manager, avec `modules/home/common.nix` partagé et un `home.nix`
+   par host pour les différences.
+4. **Contournements tracés** : chaque fix temporaire est inscrit dans `temp-fixes.toml`
+   (voir [Fix temporaires](../reference/temp-fixes.md)).

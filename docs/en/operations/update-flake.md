@@ -1,22 +1,32 @@
-# Update flake
+# Updating the flake
 
-## Update Inputs
+## Automatic (CI)
+
+The `update-flake-lock.yml` workflow runs every Monday. It opens a
+"chore(flake): update flake.lock" PR, evaluates both hosts and comments on the PR with:
+
+- the per-host package version diff;
+- the result of the [temporary fixes](../reference/temp-fixes.md) removal tests.
+
+The `build-laptop.yml` workflow also builds the laptop system on that PR (non-blocking).
+
+## Manual
 
 ```sh
-nix flake update
-nix flake lock --update-input nixpkgs
+nix flake update                 # every input
+nix flake update nixpkgs         # one input
 ```
 
-## Branch Policy
+## Branch policy
 
-- Keep `nixpkgs`, `home-manager`, and `stylix` aligned on the current stable release.
-- `nixpkgs-unstable` can be updated separately for explicit exceptions.
-- A stable release change should update the related branches in `flake.nix`, then refresh the lock.
+- `nixpkgs`, `home-manager` and `stylix` stay on the current stable release.
+- `nixpkgs-unstable` is for explicit exceptions.
+- A stable release change updates the branches in `flake.nix`, then the lock.
 
-## Validate
+## Check after an update
 
 ```sh
 nix flake check --no-build
-sudo nixos-rebuild dry-activate --flake .#desktop
-sudo nixos-rebuild dry-activate --flake .#laptop
+nix run .#temp-fixes -- check --all
+nh os test                       # then nh os switch if all is well
 ```

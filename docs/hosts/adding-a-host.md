@@ -1,45 +1,75 @@
 # Ajouter un host
 
-## 1) Créer le module host
+## 1) Créer le dossier du host
 
-Créer `hosts/<nouveau-host>/default.nix` puis importer:
-
-- un fichier hardware (`hardware-configuration-*.nix`),
-- les modules GPU adaptés,
-- les paquets spécifiques,
-- éventuels modules services/drivers.
-
-## 2) Déclarer le host dans `flake.nix`
-
-```nix
-nixosConfigurations.<nouveau-host> = nixpkgs.lib.nixosSystem {
-  specialArgs = {
-    inherit inputs;
-    pkgs-unstable = import nixpkgs-unstable {
-      inherit system;
-      config.allowUnfree = true;
-    };
-  };
-  modules = commonModules ++ [
-    { nixpkgs.hostPlatform = system; }
-    ./hosts/<nouveau-host>
-  ];
-};
+```text
+hosts/<host>/
+├── default.nix     # système
+├── hardware.nix    # généré par nixos-generate-config
+├── home.nix        # Home Manager de l'utilisateur
+└── hyprland.lua    # écrans, entrées, raccourcis propres au host
 ```
 
-## 3) Ajouter le Home Manager utilisateur
-
-Dans le module host:
-
-```nix
-home-manager.users.<user> = import ../../home-<host>.nix;
-nix.settings.trusted-users = [ "<user>" ];
-```
-
-## 4) Vérifier
+`hardware.nix` se génère sur la machine cible :
 
 ```sh
-nix flake show
+nixos-generate-config --show-hardware-config > hosts/<host>/hardware.nix
+```
+
+## 2) `default.nix`
+
+```nix
+{ ... }:
+
+{
+  imports = [
+    ./hardware.nix
+    ../../modules/nixos
+    ../../modules/nixos/hardware/amdgpu.nix   # ou nvidia.nix
+  ];
+
+  networking.hostName = "<host>";
+
+  users.users.<user> = {
+    isNormalUser = true;
+    extraGroups = [ "networkmanager" "wheel" "video" "input" ];
+  };
+  home-manager.users.<user> = import ./home.nix;
+  nix.settings.trusted-users = [ "<user>" ];
+
+  # Ports ouverts uniquement via Tailscale.
+  networking.firewall.interfaces.tailscale0.allowedTCPPorts = [ ];
+
+  system.stateVersion = "26.05"; # release de la première installation
+}
+```
+
+## 3) `home.nix`
+
+```nix
+{ ... }:
+
+{
+  imports = [ ../../modules/home/common.nix ];
+
+  home.username = "<user>";
+  home.homeDirectory = "/home/<user>";
+  xdg.configFile."hypr/host.lua".source = ./hyprland.lua;
+}
+```
+
+## 4) Déclarer le host
+
+Dans `flake/hosts.nix` :
+
+```nix
+<host> = mkHost { name = "<host>"; };
+```
+
+## 5) Vérifier
+
+```sh
+git add hosts/<host>       # la flake ne voit que les fichiers suivis par git
+nix eval --raw .#nixosConfigurations.<host>.config.system.build.toplevel.drvPath
 nix flake check --no-build
-sudo nixos-rebuild dry-activate --flake .#<nouveau-host>
 ```

@@ -1,18 +1,18 @@
 # Arborescence du dépôt
 
-## Répertoires clés
-
 | Chemin | Rôle |
 |---|---|
-| `flake.nix` | Entrée principale et composition des outputs |
-| `common-modules.nix` | Modules partagés par tous les hosts |
-| `configuration.nix` | Configuration système commune |
-| `hosts/` | Configuration spécifique par machine |
-| `home-*.nix` | Entrées Home Manager par host |
-| `hm/` | Modules Home Manager partagés |
-| `wm-desktop/`, `wm-laptop/` | Config Hyprland/rofi/kitty par host |
-| `packages/` | Paquets communs et paquets spécifiques |
-| `overlays/` | Overlays Nixpkgs |
-| `drivers/` | Modules de drivers noyau/firmware |
-| `scripts/` | Scripts utilitaires/checks |
-| `docs/` | Documentation MkDocs |
+| `flake.nix` | Inputs de la flake |
+| `flake/` | Sorties (flake-parts) : hosts, paquets, checks, formatter, devShell |
+| `lib/mkHost.nix` | Fabrique d'un host |
+| `hosts/<host>/` | `default.nix` (système), `hardware.nix`, `home.nix` (Home Manager), `hyprland.lua` |
+| `modules/nixos/` | Modules système ; `default.nix` = socle commun |
+| `modules/home/` | Modules Home Manager ; `common.nix` = partie commune aux deux utilisateurs |
+| `pkgs/<nom>/package.nix` | Paquets locaux : `discord-nvenc`, `opennow`, `rtw89`, `rtw89-firmware`, `temp-fixes`, `mkdocs-env` |
+| `overlays/` | Overlays nixpkgs (liste dans `overlays/default.nix`) et leurs patches |
+| `dotfiles/` | Fichiers de configuration bruts déployés par Home Manager |
+| `scripts/` | Scripts shell (gamemode, raccourcis Hyprland, hooks d'agents, CI) |
+| `temp-fixes.toml` | Registre des fix temporaires |
+| `AGENTS.md`, `CLAUDE.md`, `.claude/` | Consignes et configuration des agents IA |
+| `.github/workflows/` | CI GitHub Actions |
+| `docs/` | Documentation MkDocs (FR, et EN sous `docs/en/`) |

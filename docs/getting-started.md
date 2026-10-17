@@ -1,26 +1,25 @@
-# Getting started
+# Démarrage
 
 ## Prérequis
 
 - Nix avec les fonctionnalités `nix-command` et `flakes`.
-- Un host déclaré dans `flake.nix` (`desktop` ou `laptop`).
+- Un host déclaré dans `flake/hosts.nix` (`desktop` ou `laptop`).
 
-## Cloner la repository
+## Cloner le dépôt
+
+Les modules Home Manager supposent que le dépôt se trouve dans `~/Documents/nix-configuration`
+(alias `nh`, scratchpad de documentation).
 
 ```sh
-git clone https://github.com/LAlto96/nixos.git
-cd nixos
+git clone https://github.com/llafon-analytics/nixos.git ~/Documents/nix-configuration
+cd ~/Documents/nix-configuration
 ```
 
-## Explorer les sorties
+## Environnement de travail
 
 ```sh
-nix flake show
-```
-
-## Vérification rapide
-
-```sh
+nix develop          # ou `direnv allow` : formatteur, linters, nixd, temp-fixes, MkDocs
+nix flake show       # sorties de la flake
 nix flake check --no-build
 ```
 
@@ -28,17 +27,14 @@ nix flake check --no-build
 
 ```sh
 sudo nixos-rebuild switch --flake .#desktop
-```
-
-Pour le laptop:
-
-```sh
 sudo nixos-rebuild switch --flake .#laptop
 ```
 
-## Après premier switch
+Une fois installé, `nh os switch` reconstruit l'hôte courant (voir [Rebuild](operations/rebuild.md)).
 
-Si vous utilisez Tailscale:
+## Après le premier switch
+
+Tous les services réseau ne sont joignables que via Tailscale :
 
 ```sh
 sudo tailscale up --auth-key=<VOTRE_CLE>
