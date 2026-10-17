@@ -48,6 +48,20 @@ retiler les autres fenêtres.
 - démon : service utilisateur `pyprland.service`, lié à `hyprland-session.target`
   (ne démarre pas sous Plasma)
 - diagnostic : `systemctl --user status pyprland`, `journalctl --user -u pyprland`
+
+## Aide-mémoire
+
+`SUPER + F1` affiche ou masque l'aide-mémoire (raccourcis, commandes,
+nouveautés), rendu par `glow` dans un second scratchpad Pyprland (`q` pour le
+fermer). La source est `hm/cheatsheet.md` : la mettre à jour dans le même commit
+qu'un nouveau raccourci ou outil, et y résumer les changements dans
+« Nouveautés ».
+
+Quand ce fichier change, une notification Caelestia « Nouveautés de la
+configuration » s'affiche une seule fois, à l'ouverture de session suivante
+(service utilisateur `cheatsheet-notify`). La version vue est mémorisée dans
+`~/.local/state/nixos-cheatsheet/seen` ; supprimer ce fichier rejoue la
+notification.
 - script de check des règles: `scripts/check-hyprland-rules.sh`
 
 ## Validation des règles

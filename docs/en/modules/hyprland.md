@@ -48,6 +48,18 @@ windows.
   (not started under Plasma)
 - troubleshooting: `systemctl --user status pyprland`, `journalctl --user -u pyprland`
 
+## Cheatsheet
+
+`SUPER + F1` shows or hides the cheatsheet (shortcuts, commands, what's new),
+rendered by `glow` in a second Pyprland scratchpad (`q` closes it). Its source
+is `hm/cheatsheet.md` (in French): update it in the same commit as a new
+shortcut or tool, and summarise the changes under "Nouveautés".
+
+When that file changes, a Caelestia notification is shown once, at the next
+session start (`cheatsheet-notify` user service). The last seen version is
+stored in `~/.local/state/nixos-cheatsheet/seen`; deleting it replays the
+notification.
+
 ## Validation
 
 Validation helper:
