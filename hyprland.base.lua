@@ -192,15 +192,19 @@ hl.window_rule({ match = { class = "(clipse)" }, float = true })
 hl.window_rule({ match = { class = "(clipse)" }, size = { 622, 652 } })
 hl.window_rule({ match = { class = "(clipse)" }, stay_focused = true })
 
--- Pyprland drop-down terminal and cheatsheet (hm/pyprland.nix). Floating is declared here too so
+-- Pyprland drop-down terminal, cheatsheet, docs and ChatGPT (hm/pyprland.nix). Floating is declared here too so
 -- they survive a `hyprctl reload` that drops pyprland's runtime rules.
 hl.window_rule({ match = { class = "kitty-dropterm" }, float = true })
 hl.window_rule({ match = { class = "kitty-cheatsheet" }, float = true })
+hl.window_rule({ match = { class = "chromium-docs" }, float = true })
+hl.window_rule({ match = { class = "chromium-chatgpt" }, float = true })
 
 hl.bind("SUPER + V", hl.dsp.exec_cmd("kitty --class clipse -e clipse"))
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd("kitty"))
 hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd("pypr toggle term"))
 hl.bind(mainMod .. " + F1", hl.dsp.exec_cmd("pypr toggle help"))
+hl.bind(mainMod .. " + F2", hl.dsp.exec_cmd("pypr toggle docs"))
+hl.bind(mainMod .. " + F3", hl.dsp.exec_cmd("pypr toggle chatgpt"))
 hl.bind(mainMod .. " + Z", hl.dsp.window.close())
 hl.bind(mainMod .. " + T", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + space", hl.dsp.global("caelestia:launcher"))

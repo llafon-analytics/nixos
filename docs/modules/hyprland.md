@@ -64,6 +64,27 @@ configuration » s'affiche une seule fois, à l'ouverture de session suivante
 notification.
 - script de check des règles: `scripts/check-hyprland-rules.sh`
 
+## Documentation et ChatGPT (Pyprland)
+
+`SUPER + F2` affiche ou masque la documentation du dépôt, `SUPER + F3` ChatGPT.
+Les deux sont des fenêtres Chromium en mode application (`--app`), flottantes et
+indépendantes du workspace, gérées par Pyprland (classes `chromium-docs` et
+`chromium-chatgpt`, appariement par classe car Chromium partage un processus par
+profil).
+
+- **Documentation** : le script `docs-scratchpad` (`hm/pyprland.nix`) lance
+  `mkdocs serve` sur `127.0.0.1:8765` (environnement partagé avec `mkdocs.nix`
+  via `hm/mkdocs-env.nix`), attend le port, puis ouvre la fenêtre. Un verrou
+  `flock` évite les doublons ; fermer la fenêtre arrête le serveur. Les
+  modifications de `docs/` sont rechargées automatiquement. Échec de démarrage :
+  notification + `~/.local/state/pypr-docs/mkdocs.log`. Le dépôt doit se trouver
+  dans `~/Documents/nix-configuration`.
+- **ChatGPT** : nixpkgs n'a pas d'application Linux (l'attribut `chatgpt` est
+  l'app macOS et ne s'évalue pas sous Linux) ; l'application web tourne donc
+  dans un profil Chromium dédié (`~/.local/state/pypr-chatgpt`), qui conserve la
+  session. Se connecter une fois ; masquer la fenêtre ne l'arrête pas, la
+  fermer puis rappeler `F3` la relance.
+
 ## Validation des règles
 
 ```sh

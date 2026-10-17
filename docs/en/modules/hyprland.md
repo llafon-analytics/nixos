@@ -60,6 +60,26 @@ session start (`cheatsheet-notify` user service). The last seen version is
 stored in `~/.local/state/nixos-cheatsheet/seen`; deleting it replays the
 notification.
 
+## Docs and ChatGPT (Pyprland)
+
+`SUPER + F2` shows or hides the repository documentation, `SUPER + F3` ChatGPT.
+Both are floating, workspace-independent Chromium app windows (`--app`) managed
+by Pyprland (classes `chromium-docs` and `chromium-chatgpt`, matched by class
+because Chromium shares one process per profile).
+
+- **Docs**: the `docs-scratchpad` script (`hm/pyprland.nix`) runs `mkdocs serve`
+  on `127.0.0.1:8765` (environment shared with `mkdocs.nix` through
+  `hm/mkdocs-env.nix`), waits for the port, then opens the window. An `flock`
+  lock prevents duplicates; closing the window stops the server. Edits under
+  `docs/` live-reload. Startup failure: notification plus
+  `~/.local/state/pypr-docs/mkdocs.log`. The repository must live at
+  `~/Documents/nix-configuration`.
+- **ChatGPT**: nixpkgs has no Linux app (the `chatgpt` attribute is the macOS
+  app and does not evaluate on Linux), so the web app runs in a dedicated
+  Chromium profile (`~/.local/state/pypr-chatgpt`) that keeps the session. Log
+  in once; hiding the window keeps it running, closing it and pressing `F3`
+  again relaunches it.
+
 ## Validation
 
 Validation helper:

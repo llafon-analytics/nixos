@@ -6,7 +6,7 @@ Entry points:
 - `home-laptop.nix`
 
 Shared imports include `hm/caelestia.nix`, `hm/zsh.nix`, `hm/cli-tools.nix` (Atuin,
-zoxide, Lazygit, nh), `hm/pyprland.nix` (drop-down terminal), `hm/neovim.nix`,
+zoxide, Lazygit, nh), `hm/pyprland.nix` (scratchpads: terminal, cheatsheet, docs, ChatGPT), `hm/neovim.nix`,
 `hm/vscode.nix` and the host WM module. `home-desktop.nix` also enables Lazydocker.
 
 Caelestia's upstream Home Manager module is injected globally through

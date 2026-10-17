@@ -11,7 +11,7 @@
 - `hm/vscode.nix`
 - `hm/zsh.nix`
 - `hm/cli-tools.nix` (Atuin, zoxide, Lazygit, nh)
-- `hm/pyprland.nix` (terminal escamotable)
+- `hm/pyprland.nix` (scratchpads : terminal, aide-mémoire, documentation, ChatGPT)
 - `hm/neovim.nix`
 - un module WM (`wm-desktop/wm.nix` ou `wm-laptop/wm.nix`)
 
