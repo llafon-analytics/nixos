@@ -3,10 +3,6 @@
 {
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.nvidia.acceptLicense = true;
-  nixpkgs.config.permittedInsecurePackages = [
-    "electron-25.9.0"
-    "freeimage-unstable-2021-11-01"
-  ];
 
   nix.settings.experimental-features = [
     "nix-command"

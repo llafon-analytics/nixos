@@ -2,6 +2,5 @@
 { inputs }:
 [
   (import ./droidcam-transform-buffer.nix)
-  (import ./imagemagick-compat.nix)
   inputs.millennium.overlays.default
 ]
