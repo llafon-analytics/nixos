@@ -51,7 +51,11 @@
       obs-pipewire-audio-capture
       obs-livesplit-one
       obs-gstreamer
-      obs-backgroundremoval
+      # TEMP-FIX(obs-backgroundremoval-cpu): CPU-only inference, as before useGlobalPkgs.
+      (obs-backgroundremoval.override {
+        onnxruntime = pkgs.onnxruntime.override { cudaSupport = false; };
+        opencv = pkgs.opencv.override { enableCuda = false; };
+      })
       input-overlay
       obs-shaderfilter
     ];

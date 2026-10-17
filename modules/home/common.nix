@@ -15,8 +15,6 @@
     ./hyprland
   ];
 
-  nixpkgs.config.allowUnfree = true;
-
   # Release whose Home Manager defaults this configuration was written against.
   # Only change it after reading the Home Manager release notes.
   home.stateVersion = "25.11";

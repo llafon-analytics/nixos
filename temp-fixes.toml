@@ -159,3 +159,15 @@ removal_test = "find \"$(nix build --no-link --print-out-paths .#nixosConfigurat
 added = 2025-12-25
 review_after = 2026-11-28
 history = ["2026-10-17 : entrée créée lors de l'audit."]
+
+[[fix]]
+id = "obs-backgroundremoval-cpu"
+title = "Plugin OBS de détourage sans CUDA"
+status = "active"
+hosts = ["desktop"]
+files = ["hosts/desktop/home.nix"]
+reason = "Avec useGlobalPkgs, cudaSupport (global sur le desktop) ferait compiler onnxruntime, OpenCV, cuDNN et NCCL avec CUDA pour ce seul plugin (plusieurs heures, absent du cache)."
+removal_condition = "Le cache binaire fournit ces dépendances en version CUDA, ou on accepte la compilation pour profiter du détourage sur GPU."
+added = 2026-10-17
+review_after = 2027-04-15
+history = ["2026-10-17 : créé en passant Home Manager à useGlobalPkgs (le plugin était jusque-là construit sans CUDA)."]
