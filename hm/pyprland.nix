@@ -92,7 +92,8 @@ in
       lazy = true;
     };
     scratchpads.help = {
-      command = "kitty --class kitty-cheatsheet ${lib.getExe pkgs.glow} --tui --style light ${cheatsheet}";
+      # The short sleep matters: glow started straight from kitty renders a blank page.
+      command = "kitty --class kitty-cheatsheet sh -c 'sleep 0.3; exec ${lib.getExe pkgs.glow} --tui --style light ${cheatsheet}'";
       class = "kitty-cheatsheet";
       animation = "fromTop";
       size = "60% 80%";
