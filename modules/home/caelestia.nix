@@ -12,7 +12,7 @@ let
   # TEMP-FIX(caelestia-latte-palette): caelestia-cli ships Material-You-generated hues for "catppuccin/latte", not the
   # real Catppuccin palette (e.g. pink resolves to a saturated blue). Patch the shipped
   # data file with the canonical hex values already used elsewhere in this repo
-  # (hm/hyprlock/latte.conf).
+  # (dotfiles/hyprlock/latte.conf).
   catppuccinLattePalette = {
     rosewater = "dc8a78";
     flamingo = "dd7878";
@@ -243,7 +243,7 @@ in
 
       # Caelestia's own idle daemon (IdleMonitors.qml) is now the single
       # source of truth for idle behaviour (hypridle is disabled, see
-      # configuration.nix). Set the full timeout list explicitly: it
+      # modules/nixos/desktop/default.nix). Set the full timeout list explicitly: it
       # replaces upstream's default list, which ends in suspend/hibernate,
       # so idle only ever locks — screens are never blanked or put to sleep.
       # `timeout` is in seconds (Quickshell's IdleMonitor, not milliseconds).

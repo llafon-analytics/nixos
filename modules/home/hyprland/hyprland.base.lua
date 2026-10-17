@@ -192,7 +192,7 @@ hl.window_rule({ match = { class = "(clipse)" }, float = true })
 hl.window_rule({ match = { class = "(clipse)" }, size = { 622, 652 } })
 hl.window_rule({ match = { class = "(clipse)" }, stay_focused = true })
 
--- Pyprland drop-down terminal, cheatsheet, docs and ChatGPT (hm/pyprland.nix). Floating is declared here too so
+-- Pyprland drop-down terminal, cheatsheet, docs and ChatGPT (modules/home/pyprland.nix). Floating is declared here too so
 -- they survive a `hyprctl reload` that drops pyprland's runtime rules.
 hl.window_rule({ match = { class = "kitty-dropterm" }, float = true })
 hl.window_rule({ match = { class = "kitty-cheatsheet" }, float = true })

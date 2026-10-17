@@ -4,7 +4,6 @@
   ...
 }:
 {
-  #ZSH
   home.sessionPath = [
     "$HOME/.local/bin"
   ];
@@ -21,7 +20,6 @@
     enableCompletion = true;
     shellAliases = {
       doom = "~/.config/emacs/bin/doom";
-      #emacs = "emacsclient -c -a 'emacs'";
       dupdate = "nh os switch --hostname desktop --show-trace";
       lupdate = "nh os switch --hostname laptop --show-trace";
       nd = "nix develop -c zsh";
@@ -54,15 +52,6 @@
         };
       }
     ];
-    # antidote = {
-    #   enable = true;
-    #   useFriendlyNames = true;
-    #   plugins = [
-    #     "romkatv/powerlevel10k"
-    #   ];
-    # };
-    #initExtra = "[[ ! -f ~/.p10k.zsh ]] || source /etc/nixos/hm/p10k.zsh";
     initContent = "fastfetch";
-
   };
 }
