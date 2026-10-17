@@ -329,7 +329,7 @@ voice_index.write_text(text)
 
   # 2.17: Text Processing & Document Conversion
   pkgs2_17 = with pkgs; [
-    apostrophe # Distraction-free Markdown editor
+    glow # Terminal Markdown reader
     pandoc # Universal document converter
   ];
 
