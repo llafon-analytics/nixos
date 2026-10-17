@@ -25,8 +25,8 @@
       dupdate = "nh os switch --hostname desktop --show-trace";
       lupdate = "nh os switch --hostname laptop --show-trace";
       nd = "nix develop -c zsh";
-      v4l2loopback-ctl0 = "nix-shell -p linuxKernel.packages.linux_zen.v4l2loopback --run 'v4l2loopback-ctl set-caps /dev/video0 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video0 60'";
-      v4l2loopback-ctl1 = "nix-shell -p linuxKernel.packages.linux_zen.v4l2loopback --run 'v4l2loopback-ctl set-caps /dev/video1 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video1 60'";
+      v4l2loopback-ctl0 = "v4l2loopback-ctl set-caps /dev/video0 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video0 60";
+      v4l2loopback-ctl1 = "v4l2loopback-ctl set-caps /dev/video1 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video1 60";
       skb = "hyprctl switchxkblayout htltek-gaming-keyboard next";
       extract = "~/extract.sh";
       dpms = "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })' && sleep 2 && hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'";

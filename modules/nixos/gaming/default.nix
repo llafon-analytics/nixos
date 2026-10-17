@@ -18,7 +18,6 @@ in
     winetricks
     dosbox-staging
     wineWow64Packages.waylandFull
-    radeontop
     gamescope
     prismlauncher
     mangohud

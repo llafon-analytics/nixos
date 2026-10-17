@@ -21,13 +21,6 @@ _:
     extraSetFlags = [ "--ssh" ];
   };
 
-  networking.dhcpcd.wait = "background";
-  networking.dhcpcd.extraConfig = ''
-    timeout 1
-    noarp
-    nodelay
-  '';
-
   # Skip waiting for full network connectivity during boot.
   systemd.services."NetworkManager-wait-online".enable = false;
 }

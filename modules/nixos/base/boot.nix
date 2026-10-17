@@ -20,6 +20,8 @@
     "snd_aloop"
   ];
   boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+  # v4l2loopback-ctl, matching the loaded module (used by the v4l2loopback-ctl* aliases).
+  environment.systemPackages = [ config.boot.kernelPackages.v4l2loopback.bin ];
   boot.extraModprobeConfig = ''
     # Configure v4l2loopback: virtual camera settings for apps like Skype, Zoom, and Teams.
     options v4l2loopback video_nr=0,1 exclusive_caps=1,1 card_label="Virtual Camera 0","OBS Camera"

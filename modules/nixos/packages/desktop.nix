@@ -1,41 +1,36 @@
-{ pkgs, pkgs-unstable, ... }:
+{
+  pkgs,
+  pkgs-unstable,
+  lib,
+  ...
+}:
 
+# Desktop-only packages (NVIDIA workstation), grouped by domain.
 let
-  unstableGamingDesktopPkgs = with pkgs-unstable; [
-    alvr # VR
-    nvidia_oc
-  ];
+  groups = {
+    audio = with pkgs; [
+      reaper
+      yabridge # Bridges Windows plugins
+      yabridgectl
+    ];
 
-  # 3.1: Digital Audio Workstations (DAWs)
-  pkgs3_1 = with pkgs; [
-    reaper # Main DAW application
-    yabridge # Bridges Windows plugins
-    yabridgectl # CLI helper for yabridge
-  ];
+    video = with pkgs; [ davinci-resolve ];
 
-  # 3.2: Video Editing
-  pkgs3_2 = with pkgs; [
-    davinci-resolve # Professional video editor
-  ];
+    virtualisation = with pkgs; [ quickemu ];
 
-  # 3.3: Virtualization
-  pkgs3_3 = with pkgs; [
-    qemu
-    quickemu
-  ];
+    benchmarks = with pkgs; [ phoronix-test-suite ];
 
-  # 3.4: Bench & Overcklocking
-  pkgs3_4 = with pkgs; [
-    phoronix-test-suite
-  ];
+    steam = with pkgs; [
+      sgdboop # Steam artwork manager
+    ];
 
-  # 3.5: Steam utilities
-  pkgs3_5 = with pkgs; [
-    sgdboop # Steam artwork manager
-  ];
-
+    # Fast-moving gaming/VR tools.
+    unstable = with pkgs-unstable; [
+      alvr
+      nvidia_oc
+    ];
+  };
 in
 {
-  environment.systemPackages =
-    pkgs3_1 ++ pkgs3_2 ++ pkgs3_3 ++ pkgs3_4 ++ pkgs3_5 ++ unstableGamingDesktopPkgs;
+  environment.systemPackages = lib.concatLists (lib.attrValues groups);
 }
