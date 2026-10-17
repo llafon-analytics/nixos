@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   toml = pkgs.formats.toml { };
@@ -27,7 +32,9 @@ let
 
     [ -f "${repoDir}/mkdocs.yml" ] || fail "mkdocs.yml introuvable dans ${repoDir}"
     cd "${repoDir}"
-    ${pkgs.callPackage ../../pkgs/mkdocs-env/package.nix { }}/bin/mkdocs serve -a 127.0.0.1:${docsPort} > "$state/mkdocs.log" 2>&1 &
+    ${
+      pkgs.callPackage ../../pkgs/mkdocs-env/package.nix { }
+    }/bin/mkdocs serve -a 127.0.0.1:${docsPort} > "$state/mkdocs.log" 2>&1 &
     server=$!
     trap 'kill "$server" 2>/dev/null' EXIT
 
@@ -142,7 +149,10 @@ in
   systemd.user.services.cheatsheet-notify = {
     Unit = {
       Description = "Announce a new version of the cheatsheet";
-      After = [ "hyprland-session.target" "caelestia.service" ];
+      After = [
+        "hyprland-session.target"
+        "caelestia.service"
+      ];
       PartOf = [ "hyprland-session.target" ];
     };
     Service = {

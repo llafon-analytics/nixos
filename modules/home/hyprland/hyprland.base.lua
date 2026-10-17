@@ -186,7 +186,10 @@ hl.device({
 
 local mainMod = "SUPER"
 
-hl.bind(mainMod .. " + semicolon", hl.dsp.exec_cmd("/home/desktop/Documents/nix-configuration/scripts/mute-discord.sh toggle"))
+hl.bind(
+  mainMod .. " + semicolon",
+  hl.dsp.exec_cmd("/home/desktop/Documents/nix-configuration/scripts/mute-discord.sh toggle")
+)
 
 hl.window_rule({ match = { class = "(clipse)" }, float = true })
 hl.window_rule({ match = { class = "(clipse)" }, size = { 622, 652 } })

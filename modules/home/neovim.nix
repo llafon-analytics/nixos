@@ -1,4 +1,4 @@
-{pkgs, ...}: {
+{ pkgs, ... }: {
   programs.neovim = {
     enable = true;
     coc.enable = true;
@@ -28,18 +28,16 @@
       coc-nginx
       coc-pyright
     ];
-    extraConfig =
-      ''
-        nnoremap <F4> :NERDTreeToggle<CR>
-      '';
-    initLua =
-      ''
-        require 'coc'
-        vim.g.coq_settings = {auto_start = true}
-        vim.cmd.colorscheme "catppuccin-latte"
-        require("coq_3p") {
-          { src = "copilot", short_name = "COP", accept_key = "<c-f>" },
-        }
-      '';
+    extraConfig = ''
+      nnoremap <F4> :NERDTreeToggle<CR>
+    '';
+    initLua = ''
+      require 'coc'
+      vim.g.coq_settings = {auto_start = true}
+      vim.cmd.colorscheme "catppuccin-latte"
+      require("coq_3p") {
+        { src = "copilot", short_name = "COP", accept_key = "<c-f>" },
+      }
+    '';
   };
 }

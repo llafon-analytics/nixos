@@ -1,4 +1,9 @@
-{config, pkgs, lib, ...}:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 {
   #ZSH
   home.sessionPath = [
@@ -16,16 +21,16 @@
     autosuggestion.enable = true;
     enableCompletion = true;
     shellAliases = {
-        doom = "~/.config/emacs/bin/doom";
-        #emacs = "emacsclient -c -a 'emacs'";
-        dupdate = "nh os switch ~/Documents/nix-configuration -H desktop --show-trace";
-        lupdate = "nh os switch ~/Documents/nix-configuration -H laptop --show-trace";
-        nd = "nix develop -c zsh";
-        v4l2loopback-ctl0 = "nix-shell -p linuxKernel.packages.linux_zen.v4l2loopback --run 'v4l2loopback-ctl set-caps /dev/video0 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video0 60'";
-        v4l2loopback-ctl1 = "nix-shell -p linuxKernel.packages.linux_zen.v4l2loopback --run 'v4l2loopback-ctl set-caps /dev/video1 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video1 60'";
-        skb = "hyprctl switchxkblayout htltek-gaming-keyboard next";
-        extract="~/extract.sh";
-        dpms = "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })' && sleep 2 && hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'";
+      doom = "~/.config/emacs/bin/doom";
+      #emacs = "emacsclient -c -a 'emacs'";
+      dupdate = "nh os switch ~/Documents/nix-configuration -H desktop --show-trace";
+      lupdate = "nh os switch ~/Documents/nix-configuration -H laptop --show-trace";
+      nd = "nix develop -c zsh";
+      v4l2loopback-ctl0 = "nix-shell -p linuxKernel.packages.linux_zen.v4l2loopback --run 'v4l2loopback-ctl set-caps /dev/video0 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video0 60'";
+      v4l2loopback-ctl1 = "nix-shell -p linuxKernel.packages.linux_zen.v4l2loopback --run 'v4l2loopback-ctl set-caps /dev/video1 \"YU12:1280x720\" && sudo v4l2loopback-ctl set-fps /dev/video1 60'";
+      skb = "hyprctl switchxkblayout htltek-gaming-keyboard next";
+      extract = "~/extract.sh";
+      dpms = "hyprctl dispatch 'hl.dsp.dpms({ action = \"disable\" })' && sleep 2 && hyprctl dispatch 'hl.dsp.dpms({ action = \"enable\" })'";
 
     };
     plugins = [

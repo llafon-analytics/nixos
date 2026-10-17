@@ -2,9 +2,14 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, inputs, ... }:
 {
-  # AMD Gpu 
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+{
+  # AMD Gpu
   boot.initrd.kernelModules = [ "amdgpu" ];
   # services.xserver.enable = true;
   services.xserver.videoDrivers = [ "amdgpu" ];
@@ -21,7 +26,7 @@
   ];
   # AMDvlk For 32 bit applications
   hardware.graphics.extraPackages32 = with pkgs; [
-   # driversi686Linux.amdvlk
+    # driversi686Linux.amdvlk
   ];
   environment.variables.AMD_VULKAN_ICD = "RADV";
   # For 32 bit applications
@@ -31,4 +36,3 @@
   #];
 
 }
-

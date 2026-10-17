@@ -50,7 +50,10 @@
       #                      Notification, Print, AppChooser, Access,
       #                      Account, Email, Inhibit, DynamicLauncher,
       #                      Lockdown, Wallpaper)
-      default = [ "hyprland" "gtk" ];
+      default = [
+        "hyprland"
+        "gtk"
+      ];
 
       # The single interface routed away from the defaults above. Applies to
       # Open File / Open Multiple Files / Select Folder / Save As for every

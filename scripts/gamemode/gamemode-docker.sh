@@ -32,7 +32,7 @@ stop_docker() {
       log "could not list running Docker containers"
       return 1
     fi
-    if [[ -n "$containers_output" ]]; then
+    if [[ -n $containers_output ]]; then
       mapfile -t running <<<"$containers_output"
       log "stopping ${#running[@]} running Docker container(s)"
       docker stop --time 15 "${running[@]}"
@@ -50,7 +50,7 @@ stop_docker() {
 }
 
 enter() {
-  if [[ -e "$state_dir" ]]; then
+  if [[ -e $state_dir ]]; then
     if state_is_valid; then
       log "Docker state already recorded; keeping the initial snapshot"
       stop_docker
@@ -76,12 +76,12 @@ enter() {
   temporary_state="$(mktemp -d "$state_root/.state.XXXXXX")"
   trap 'if [[ -n "${temporary_state:-}" && -d "$temporary_state" ]]; then rm -f "$temporary_state/valid" "$temporary_state/docker.service" "$temporary_state/docker.socket" "$temporary_state/containers"; rmdir "$temporary_state"; fi' RETURN
 
-  if [[ "$service_state" == "active" ]]; then
+  if [[ $service_state == "active" ]]; then
     if ! containers_output="$(docker ps --no-trunc --quiet)"; then
       log "could not capture the initial running container set"
       return 1
     fi
-    if [[ -n "$containers_output" ]]; then
+    if [[ -n $containers_output ]]; then
       mapfile -t containers <<<"$containers_output"
     fi
   fi
@@ -120,18 +120,18 @@ restore_containers() {
   declare -A wanted=()
 
   while IFS= read -r container; do
-    [[ -n "$container" ]] && wanted["$container"]=1
+    [[ -n $container ]] && wanted["$container"]=1
   done <"$state_dir/containers"
 
   if ! running_output="$(docker ps --no-trunc --quiet)"; then
     log "could not list containers after Docker restoration"
     return 1
   fi
-  if [[ -n "$running_output" ]]; then
+  if [[ -n $running_output ]]; then
     mapfile -t running <<<"$running_output"
   fi
   for container in "${running[@]}"; do
-    if [[ -z "${wanted[$container]+present}" ]]; then
+    if [[ -z ${wanted[$container]+present} ]]; then
       unexpected+=("$container")
     fi
   done
@@ -149,7 +149,7 @@ restore_containers() {
 
   expected="$(sort "$state_dir/containers")"
   actual="$(docker ps --no-trunc --quiet | sort)"
-  if [[ "$actual" != "$expected" ]]; then
+  if [[ $actual != "$expected" ]]; then
     log "running container set does not match the recorded state"
     return 1
   fi
@@ -165,7 +165,7 @@ remove_state() {
 }
 
 exit_mode() {
-  if [[ ! -e "$state_dir" ]]; then
+  if [[ ! -e $state_dir ]]; then
     log "no Docker state to restore"
     return 0
   fi
@@ -210,14 +210,14 @@ exec 9>"$lock_file"
 flock 9
 
 case "${1:-}" in
-  start)
-    enter
-    ;;
-  end)
-    exit_mode
-    ;;
-  *)
-    log "usage: gamemode-docker {start|end}"
-    exit 2
-    ;;
+start)
+  enter
+  ;;
+end)
+  exit_mode
+  ;;
+*)
+  log "usage: gamemode-docker {start|end}"
+  exit 2
+  ;;
 esac
