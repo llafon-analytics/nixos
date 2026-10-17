@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 # Home Manager configuration shared by every user/host.
 # Host-specific additions live in hosts/<host>/home.nix.
@@ -20,6 +20,9 @@
   home.stateVersion = "25.11";
 
   programs.home-manager.enable = true;
+
+  # `temp-fixes` CLI for the registry of temporary workarounds (temp-fixes.toml).
+  home.packages = [ (pkgs.callPackage ../../pkgs/temp-fixes/package.nix { }) ];
 
   home.file = {
     ".config/nvim/lua/coc.lua".source = ../../dotfiles/nvim/coc.lua;

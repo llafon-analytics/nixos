@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(nix eval:*)",
+      "Bash(nix flake check --no-build:*)",
+      "Bash(nix flake show:*)",
+      "Bash(nix flake metadata:*)",
+      "Bash(nix build --dry-run:*)",
+      "Bash(nix fmt:*)",
+      "Bash(nix run .#temp-fixes:*)",
+      "Bash(nix run nixpkgs#nix-diff:*)",
+      "Bash(nix derivation show:*)",
+      "Bash(temp-fixes:*)",
+      "Bash(statix:*)",
+      "Bash(deadnix:*)",
+      "Bash(rg:*)",
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git show:*)"
+    ],
+    "deny": [
+      "Bash(nixos-rebuild switch:*)",
+      "Bash(nixos-rebuild boot:*)",
+      "Bash(nh os switch:*)",
+      "Bash(nh os boot:*)",
+      "Bash(sudo:*)",
+      "Bash(nix-collect-garbage:*)",
+      "Bash(nix store gc:*)",
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)"
+    ]
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/scripts/hooks/temp-fixes-session.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$CLAUDE_PROJECT_DIR\"/scripts/hooks/format-file.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
