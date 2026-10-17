@@ -1,13 +1,17 @@
-{ desktopPorts ? import ./ports.nix, ... }:
 { pkgs, inputs, ... }:
+
+let
+  ports = import ./ports.nix;
+in
 {
   imports = [
+    ./hardware.nix
+    ../../modules/nixos
+    ../../modules/nixos/hardware/nvidia.nix
+    ../../modules/nixos/hardware/rtw89.nix
+    ../../modules/nixos/gaming/gamemode-optimizations.nix
+    ../../modules/nixos/packages/desktop.nix
     inputs.nix-craftapps.nixosModules.default
-    ../../hardware-configuration-desktop.nix
-    ../../nvidiagpu.nix
-    ../../packages/desktop.nix
-    ../../modules/gamemode-optimizations.nix
-    ../../drivers/rtw89.nix
   ];
 
   programs.craftapps = {
@@ -16,8 +20,8 @@
   };
 
   networking.firewall = {
-    allowedTCPPorts = desktopPorts;
-    allowedUDPPorts = desktopPorts;
+    allowedTCPPorts = ports;
+    allowedUDPPorts = ports;
   };
 
   services.openssh = {
@@ -31,8 +35,7 @@
     ProcessSizeMax = 0;
   };
 
-  home-manager.users.desktop = import ../../home-desktop.nix;
-  home-manager.backupFileExtension = "backup";
+  home-manager.users.desktop = import ./home.nix;
 
   nix.settings.trusted-users = [ "desktop" ];
 
@@ -54,9 +57,7 @@
   boot.kernel.sysctl."vm.swappiness" = 60;
   # Let periodic TRIM reach the filesystem through the encrypted root volume.
   boot.initrd.luks.devices."nvme0n1p1_crypt".allowDiscards = true;
-  boot.kernelParams = [
-    "nowatchdog"
-  ];
+  boot.kernelParams = [ "nowatchdog" ];
   boot.blacklistedKernelModules = [ "sp5100_tco" ];
 
   # Prefer weekly TRIM over continuous discard on file deletion.
@@ -67,20 +68,22 @@
 
   services.displayManager = {
     sddm.enable = true;
+    sddm.wayland.enable = true;
     autoLogin.enable = true;
     autoLogin.user = "desktop";
-    sddm.wayland.enable = true;
+    defaultSession = "hyprland";
   };
   services.desktopManager.plasma6.enable = true;
-  services.displayManager.defaultSession = "hyprland";
 
   hardware.nvidia-container-toolkit.enable = true;
 
   # LACT provides monitoring, fan control and overclocking for the NVIDIA GPU.
   # The package ships the lactd unit; registering it with systemd makes it
   # available and starts it at boot.
-  environment.systemPackages = [ pkgs.lact pkgs.furmark ];
+  environment.systemPackages = [
+    pkgs.lact
+    pkgs.furmark
+  ];
   systemd.packages = [ pkgs.lact ];
   systemd.services.lactd.wantedBy = [ "multi-user.target" ];
-
 }

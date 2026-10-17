@@ -1,7 +1,7 @@
-{ config, pkgs, pkgs-unstable, lib, inputs, ... }:
+{ pkgs, pkgs-unstable, lib, inputs, ... }:
 
 let
-  openNow = pkgs.callPackage ./opennow.nix { };
+  openNow = pkgs.callPackage ../../../pkgs/opennow/package.nix { };
 
   discordBase = pkgs-unstable.discord.override {
     withVencord = true;
@@ -407,29 +407,6 @@ voice_index.write_text(text)
 
 in
 {
-  ##############################################################
-  # 1. Program and Service Enablings
-  ##############################################################
-  # Enable Java support.
-  programs.java.enable = true;
-
-  # Steam configuration: enables Steam along with firewall rules for remote play and dedicated server,
-  # plus enabling a gamescope session for improved gaming performance.
-  programs.steam = {
-    enable = true;
-    package = pkgs.millennium-steam;
-    extest.enable = true; # Fixes invisible/desync cursor with Steam Input "As Mouse" on Wayland
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-    extraPackages = with pkgs; [
-      flatpak
-    ];
-    #   gamescopeSession.enable = true;
-    #
-  };
-  programs.gamescope.enable = true;
-
   ##############################################################
   # 2. System-Wide Packages
   ##############################################################

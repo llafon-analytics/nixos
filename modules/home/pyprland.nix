@@ -27,7 +27,7 @@ let
 
     [ -f "${repoDir}/mkdocs.yml" ] || fail "mkdocs.yml introuvable dans ${repoDir}"
     cd "${repoDir}"
-    ${import ./mkdocs-env.nix pkgs}/bin/mkdocs serve -a 127.0.0.1:${docsPort} > "$state/mkdocs.log" 2>&1 &
+    ${pkgs.callPackage ../../pkgs/mkdocs-env/package.nix { }}/bin/mkdocs serve -a 127.0.0.1:${docsPort} > "$state/mkdocs.log" 2>&1 &
     server=$!
     trap 'kill "$server" 2>/dev/null' EXIT
 
@@ -52,7 +52,7 @@ let
   '';
 
   # Versioned with the modules it describes; the store path changes with its content.
-  cheatsheet = ./cheatsheet.md;
+  cheatsheet = ../../dotfiles/cheatsheet.md;
 
   # Announce the cheatsheet once per new version, through Caelestia's notification
   # server. Caelestia starts asynchronously, so notify-send is retried for a while;

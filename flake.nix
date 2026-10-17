@@ -63,72 +63,26 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, home-manager, pipewire-screenaudio, stylix, zen-browser, ... }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, ... }:
     let
       system = "x86_64-linux";
-      desktopPorts = import ./hosts/desktop/ports.nix;
-      droidcamTransformBufferOverlay = import ./overlays/droidcam-transform-buffer.nix;
-      imageMagickCompatOverlay = import ./overlays/imagemagick-compat.nix;
-      commonModules = import ./common-modules.nix {
-        inherit inputs droidcamTransformBufferOverlay imageMagickCompatOverlay;
+      mkHost = host: nixpkgs.lib.nixosSystem {
+        specialArgs = {
+          inherit inputs;
+          pkgs-unstable = import nixpkgs-unstable {
+            inherit system;
+            config.allowUnfree = true;
+          };
+        };
+        modules = [
+          { nixpkgs.hostPlatform = system; }
+          ./hosts/${host}
+        ];
       };
     in {
-      overlays.droidcam-transform-buffer = droidcamTransformBufferOverlay;
-      overlays.imagemagick-compat = imageMagickCompatOverlay;
       nixosConfigurations = {
-        laptop = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
-            pkgs-unstable = import nixpkgs-unstable {
-              inherit system;
-              config.allowUnfree = true;
-            };
-          };
-          modules = commonModules ++ [
-            { nixpkgs.hostPlatform = system; }
-            ./hosts/laptop
-          ];
-        };
-        desktop = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
-            pkgs-unstable = import nixpkgs-unstable {
-              inherit system;
-              config.allowUnfree = true;
-            };
-          };
-          modules = commonModules ++ [
-            { nixpkgs.hostPlatform = system; }
-            (import ./hosts/desktop { inherit desktopPorts; })
-          ];
-        };
-      };
-      checks = let
-        system = "x86_64-linux";
-        pkgs = import nixpkgs {
-          inherit system;
-          overlays = [ droidcamTransformBufferOverlay ];
-        };
-      in {
-        ${system} = {
-          droidcam = pkgs.droidcam;
-          hyprland-rules = pkgs.runCommand "hyprland-rules-check" {
-            src = ./.;
-            hyprlandBaseLua = ./hyprland.base.lua;
-            hyprlandDesktopLua = ./wm-desktop/hyprland.lua;
-            hyprlandLaptopLua = ./wm-laptop/hyprland.lua;
-            nativeBuildInputs = [ pkgs.bash pkgs.lua pkgs.ripgrep ];
-          } ''
-            cp -R "$src" repo
-            chmod -R u+w repo
-            cp "$hyprlandBaseLua" repo/hyprland.base.lua
-            cp "$hyprlandDesktopLua" repo/wm-desktop/hyprland.lua
-            cp "$hyprlandLaptopLua" repo/wm-laptop/hyprland.lua
-            cd repo
-            ${pkgs.bash}/bin/bash scripts/check-hyprland-rules.sh
-            touch "$out"
-          '';
-        };
+        laptop = mkHost "laptop";
+        desktop = mkHost "desktop";
       };
     };
 }

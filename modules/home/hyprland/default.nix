@@ -1,7 +1,9 @@
-{ config, pkgs, lib, ... }:
+{ pkgs, ... }:
 
+# Shared Hyprland session: compositor, rofi window switcher and kitty.
+# Each host provides its own `hypr/host.lua` (monitors, input, host binds) from
+# hosts/<host>/home.nix.
 {
-  # Hyprland Config
   wayland.windowManager.hyprland = {
     enable = true;
     # NixOS owns the complete Hyprland/GTK/KDE portal set. Installing only
@@ -13,20 +15,13 @@
       require("host")
     '';
   };
-  xdg.configFile = {
-    "hypr/base.lua".source = ../hyprland.base.lua;
-    "hypr/host.lua".source = ./hyprland.lua;
-  };
+  xdg.configFile."hypr/base.lua".source = ./hyprland.base.lua;
 
-  # Rofi Config
   # Caelestia's launcher replaced `-show drun` (SUPER+space); rofi is kept only as
   # a window switcher (SUPER+W), which Caelestia has no equivalent for.
-  stylix.targets.rofi.enable = false;
   programs.rofi = {
     enable = true;
     package = pkgs.rofi;
-    theme = ./rofi/catppuccin-latte.rasi;
-    font = "JetBrainsMono NF";
     extraConfig = {
       modi = "window";
       icon-theme = "Oranchelo";
@@ -44,7 +39,6 @@
     };
   };
 
-  # kitty config
   programs.kitty = {
     enable = true;
     package = pkgs.kitty;
@@ -52,9 +46,5 @@
     # Kitty otherwise reopens in the last saved window state (~/.cache/kitty/main.json); once
     # that is "maximized", Hyprland shows every new terminal fullscreen.
     settings.remember_window_size = false;
-    font ={
-        name = lib.mkForce "JetBrainsMono NF";
-        size = lib.mkForce 13;
-    };
   };
 }

@@ -5,7 +5,7 @@
     settings = {
       logo = {
         type = "file";
-        source = ./fastfetch/nixos-braille.txt;
+        source = ../../dotfiles/fastfetch/nixos-braille.txt;
         color = {
           "1" = "38;5;110";
           "2" = "38;5;67";

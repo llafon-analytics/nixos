@@ -1,5 +1,5 @@
 { pkgs ? import <nixpkgs> { } }:
 
 pkgs.mkShell {
-  packages = [ (import ./hm/mkdocs-env.nix pkgs) ];
+  packages = [ (pkgs.callPackage ./pkgs/mkdocs-env/package.nix { }) ];
 }
