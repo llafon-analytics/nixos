@@ -1,9 +1,14 @@
-{ lib, stdenv, fetchFromGitHub }:
+{
+  lib,
+  stdenvNoCC,
+  fetchFromGitHub,
+}:
 
-stdenv.mkDerivation rec {
+stdenvNoCC.mkDerivation {
   pname = "rtw89-firmware";
-  version = "git-7da080f"; # optionnel, juste indicatif
+  version = "0-unstable-2026-03-05";
 
+  # Same revision as ./rtw89.nix: the firmware must match the driver.
   src = fetchFromGitHub {
     owner = "morrownr";
     repo = "rtw89";
@@ -11,31 +16,21 @@ stdenv.mkDerivation rec {
     hash = "sha256-2LMbwZP+esxooSowEdV+cpOjU+Zn6KWQhEVfftMW15s=";
   };
 
-  # Important : sinon stdenv voit un Makefile et lance make
+  # The source ships a Makefile for the driver; only the firmware blobs are wanted.
   dontConfigure = true;
   dontBuild = true;
 
-  # Encore plus strict : on ne garde que unpack + install
-  phases = [ "unpackPhase" "installPhase" ];
-
   installPhase = ''
-    set -euo pipefail
-
+    runHook preInstall
     mkdir -p $out/lib/firmware
-
-    if [ ! -d firmware ]; then
-      echo "rtw89-firmware: firmware/ directory not found in source" >&2
-      exit 1
-    fi
-
     cp -rv firmware/* $out/lib/firmware/
+    runHook postInstall
   '';
 
-  meta = with lib; {
+  meta = {
     description = "Firmware files shipped with morrownr/rtw89";
     homepage = "https://github.com/morrownr/rtw89";
-    # c’est du firmware redistribuable ; la licence exacte varie selon les blobs
-    license = licenses.unfreeRedistributableFirmware or licenses.unfree;
-    platforms = platforms.linux;
+    license = lib.licenses.unfreeRedistributableFirmware;
+    platforms = lib.platforms.linux;
   };
 }

@@ -1,42 +1,38 @@
-# packages/rtw89.nix
-{ lib
-, stdenv
-, fetchFromGitHub
-, kernel
-, bc
-, nukeReferences
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  kernel,
+  bc,
+  nukeReferences,
 }:
 
-stdenv.mkDerivation rec {
+stdenv.mkDerivation {
   pname = "rtw89";
-  # Recommandation: mets une date/rev explicite comme tu faisais.
-  version = "git-2025-xx-xx"; # à ajuster
+  version = "0-unstable-2026-03-05";
 
   src = fetchFromGitHub {
     owner = "morrownr";
     repo = "rtw89";
-    # Choisis un rev précis (commit SHA)
     rev = "d2f175eafa0a4ef9cc65e7073a77e60238cae614";
     hash = "sha256-2LMbwZP+esxooSowEdV+cpOjU+Zn6KWQhEVfftMW15s=";
   };
 
-  nativeBuildInputs = [ bc nukeReferences ] ++ kernel.moduleBuildDependencies;
+  nativeBuildInputs = [
+    bc
+    nukeReferences
+  ]
+  ++ kernel.moduleBuildDependencies;
 
-  hardeningDisable = [ "pic" "format" ];
+  hardeningDisable = [
+    "pic"
+    "format"
+  ];
 
-  # Build Kbuild out-of-tree
+  # Out-of-tree Kbuild against the selected kernel.
   buildPhase = ''
     runHook preBuild
-
-    # Nettoyage (optionnel)
-    # Le README mentionne "make clean modules". :contentReference[oaicite:2]{index=2}
-    # On fait un clean "soft" si présent, sinon on ignore.
-    make clean || true
-
-    make -C ${kernel.dev}/lib/modules/${kernel.modDirVersion}/build \
-      M="$PWD" \
-      modules
-
+    make -C ${kernel.dev}/lib/modules/${kernel.modDirVersion}/build M="$PWD" modules
     runHook postBuild
   '';
 
@@ -45,29 +41,22 @@ stdenv.mkDerivation rec {
 
     moddir=$out/lib/modules/${kernel.modDirVersion}/kernel/drivers/net/wireless/realtek/rtw89
     mkdir -p "$moddir"
+    # Core, bus (PCI/USB) and chip modules all land next to each other.
+    find . -maxdepth 2 -type f -name '*.ko' -exec cp -v {} "$moddir/" \;
+    nuke-refs "$moddir"/*.ko
 
-    # Copie toutes les .ko générées (core, pci/usb, puces…)
-    find . -maxdepth 2 -type f -name '*.ko' -print -exec cp -v {} "$moddir/" \;
-
-    # Fournit aussi le fichier de conf recommandé par le repo (blacklist conflits)
-    # Le README demande de copier rtw89.conf dans /etc/modprobe.d/. :contentReference[oaicite:3]{index=3}
-    mkdir -p $out/etc/modprobe.d
-    if [ -f rtw89.conf ]; then
-      cp -v rtw89.conf $out/etc/modprobe.d/rtw89.conf
-    fi
-
-    # Nettoyage refs (comme tu faisais)
-    nuke-refs "$moddir"/*.ko || true
+    # Upstream asks for rtw89.conf in /etc/modprobe.d to blacklist the in-kernel driver.
+    install -Dm444 rtw89.conf $out/etc/modprobe.d/rtw89.conf
 
     runHook postInstall
   '';
 
   enableParallelBuilding = true;
 
-  meta = with lib; {
+  meta = {
     description = "Realtek rtw89 (out-of-kernel) Wi-Fi 6/6E/7 driver bundle (morrownr)";
     homepage = "https://github.com/morrownr/rtw89";
-    license = licenses.gpl2Only;
-    platforms = platforms.linux;
+    license = lib.licenses.gpl2Only;
+    platforms = lib.platforms.linux;
   };
 }
