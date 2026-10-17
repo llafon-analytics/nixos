@@ -10,6 +10,8 @@
 - `hm/caelestia.nix`
 - `hm/vscode.nix`
 - `hm/zsh.nix`
+- `hm/cli-tools.nix` (Atuin, zoxide, Lazygit, nh)
+- `hm/pyprland.nix` (terminal escamotable)
 - `hm/neovim.nix`
 - un module WM (`wm-desktop/wm.nix` ou `wm-laptop/wm.nix`)
 

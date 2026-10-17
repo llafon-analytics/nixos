@@ -254,6 +254,11 @@
   # Link the nixpkgs channel to the specified input.
   environment.etc."channels/nixpkgs".source = inputs.nixpkgs.outPath;
 
+  # `, <command>` runs a program from nixpkgs without installing it. The
+  # nix-index-database module also replaces command-not-found, which has no
+  # database on a flake-only system, with the nix-index handler.
+  programs.nix-index-database.comma.enable = true;
+
   ##############################
   # 11. Environment & Shell Configuration
   ##############################

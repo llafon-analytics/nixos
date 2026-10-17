@@ -5,14 +5,39 @@
 | Alias | Commande |
 |---|---|
 | `doom` | `~/.config/emacs/bin/doom` |
-| `dupdate` | `sudo nixos-rebuild switch --flake ~/Documents/nix-configuration#desktop --show-trace` |
-| `lupdate` | `sudo nixos-rebuild switch --flake ~/Documents/nix-configuration#laptop --show-trace` |
+| `dupdate` | `nh os switch ~/Documents/nix-configuration -H desktop --show-trace` |
+| `lupdate` | `nh os switch ~/Documents/nix-configuration -H laptop --show-trace` |
 | `nd` | lance `nix develop -c zsh` pour entrer dans un dev shell Nix en gardant zsh |
 | `v4l2loopback-ctl0` | config `/dev/video0` |
 | `v4l2loopback-ctl1` | config `/dev/video1` |
 | `skb` | switch layout clavier Hyprland |
 | `extract` | `~/extract.sh` |
 | `dpms` | cycle dpms Hyprland |
+
+## Outils en ligne de commande (`hm/cli-tools.nix`)
+
+| Commande | Rôle |
+|---|---|
+| `Ctrl+R` | recherche dans l'historique Atuin (Entrée remet la commande dans le prompt) |
+| `z <motif>` / `zi` | saut vers un répertoire fréquent (zoxide) / sélection interactive fzf |
+| `lg` | Lazygit ; à la sortie, le shell suit le dépôt ouvert |
+| `lazydocker` | conteneurs Docker (desktop uniquement) |
+| `nh os switch` | rebuild de l'hôte courant (`NH_OS_FLAKE` pointe sur `~/Documents/nix-configuration#<hôte>`) |
+| `nh os test` / `nh os boot` | équivalents de `nixos-rebuild test` / `boot` |
+| `nh clean all --keep 5` | ménage manuel des générations et du store (aucun nettoyage automatique) |
+| `nh search <motif>` | recherche dans nixpkgs |
+| `, <commande>` | lance une commande de nixpkgs sans l'installer (comma) |
+
+`nh` intègre nix-output-monitor (arbre de build) et affiche le diff de paquets
+avant activation ; nom n'est donc pas installé séparément. Repli sans nh :
+`sudo nixos-rebuild switch --flake ~/Documents/nix-configuration#desktop`.
+
+Atuin reste local : pas de synchronisation, pas de vérification de mise à jour,
+intégration IA désactivée. La flèche haut garde l'historique zsh natif. Pour
+importer l'historique zsh existant (une seule fois) : `atuin import auto`.
+
+Une commande inconnue propose le paquet nixpkgs qui la fournit (nix-index,
+base pré-construite de `nix-index-database`).
 
 ## direnv
 

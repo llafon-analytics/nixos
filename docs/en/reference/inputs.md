@@ -13,6 +13,7 @@
 | `claude-code-nix` | `github:sadjow/claude-code-nix` | `claude` package |
 | `millennium` | `github:SteamClientHomebrew/Millennium/next?dir=packages/nix` | overlay and Millennium-patched Steam package |
 | `zen-browser` | `github:0xc000022070/zen-browser-flake` | browser package and Home Manager module (beta channel, follows `nixpkgs-unstable`) |
+| `nix-index-database` | `github:nix-community/nix-index-database` | prebuilt weekly nix-index database for comma and command-not-found, follows `nixpkgs` |
 | `catppuccin-zen` | `github:catppuccin/zen-browser` (non-flake) | Catppuccin Latte CSS and logo, with Pink accent, for Zen |
 
 ## Branch Policy
