@@ -1,4 +1,4 @@
-{ inputs, ... }:
+_:
 
 {
   nixpkgs.config.allowUnfree = true;
@@ -9,13 +9,10 @@
     "flakes"
   ];
 
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
-  nix.nixPath = [
-    "nixpkgs=/etc/channels/nixpkgs"
-    "nixos-config=/etc/nixos/configuration.nix"
-    "/nix/var/nix/profiles/per-user/root/channels"
-  ];
-  environment.etc."channels/nixpkgs".source = inputs.nixpkgs.outPath;
+  # The `nixpkgs` registry entry and NIX_PATH (`<nixpkgs>`, `nix-shell -p`) point
+  # at this flake's nixpkgs input automatically (nixpkgs.flake.setNixPath and
+  # setFlakeRegistry, set because the system is built from a flake).
+  nix.channel.enable = false;
 
   # `, <command>` runs a program from nixpkgs without installing it. The
   # nix-index-database module also replaces command-not-found, which has no
