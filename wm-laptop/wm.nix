@@ -48,6 +48,9 @@
     enable = true;
     package = pkgs.kitty;
     shellIntegration.enableZshIntegration = true;
+    # Kitty otherwise reopens in the last saved window state (~/.cache/kitty/main.json); once
+    # that is "maximized", Hyprland shows every new terminal fullscreen.
+    settings.remember_window_size = false;
     # font ={
     #  package = pkgs.meslo-lgs-nf;
     #  name = "MesloLGS NF";
