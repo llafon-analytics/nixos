@@ -25,7 +25,7 @@ history = ["2026-10-17 : entrée créée lors de l'audit."]
 [[fix]]
 id = "nvidia-driver-pin"
 title = "Pilote NVIDIA 595.71.05 figé à la main (mkDriver)"
-status = "active"
+status = "resolved"
 hosts = ["desktop"]
 files = ["modules/nixos/hardware/nvidia.nix"]
 reason = "Pilote plus récent que ceux fournis par nixpkgs au moment du changement de noyau (juillet 2026)."
@@ -33,7 +33,8 @@ removal_condition = "nvidiaPackages.production (ou latest) de nixpkgs fournit un
 removal_test = "v=$(nix eval --raw .#nixosConfigurations.desktop.config.boot.kernelPackages.nvidiaPackages.production.version) && [ \"$(printf '%s\\n' 595.71.05 \"$v\" | sort -V | head -n1)\" = 595.71.05 ]"
 added = 2026-07-02
 review_after = 2026-11-28
-history = ["2026-10-17 : entrée créée lors de l'audit."]
+resolved = 2026-10-17
+history = ["2026-10-17 : entrée créée lors de l'audit.", "2026-10-17 : résolu, nvidiaPackages.production fournit 595.71.05 (removal_test au vert)."]
 
 [[fix]]
 id = "hypridle-forced-off"
@@ -123,7 +124,7 @@ history = ["2026-10-17 : entrée créée lors de l'audit."]
 [[fix]]
 id = "crosspipe-unstable"
 title = "crosspipe pris sur nixpkgs-unstable"
-status = "active"
+status = "resolved"
 hosts = ["desktop", "laptop"]
 files = ["modules/nixos/packages/common.nix"]
 reason = "crosspipe n'existe pas dans la branche stable."
@@ -131,7 +132,8 @@ removal_condition = "crosspipe est disponible dans la branche stable de nixpkgs.
 removal_test = "nix eval --inputs-from . nixpkgs#crosspipe.version"
 added = 2026-03-08
 review_after = 2026-11-28
-history = ["2026-10-17 : entrée créée lors de l'audit."]
+resolved = 2026-10-17
+history = ["2026-10-17 : entrée créée lors de l'audit.", "2026-10-17 : résolu, crosspipe 0.1.1 est dans nixos-26.05 (removal_test au vert)."]
 
 [[fix]]
 id = "caelestia-latte-palette"

@@ -7,7 +7,8 @@
 }:
 
 # System-wide packages shared by both hosts, grouped by domain.
-# Policy: `pkgs` (stable) by default; `pkgs-unstable` only for named exceptions.
+# Policy: `pkgs` (stable) by default; `pkgs-unstable` only for named exceptions
+# (here: Discord, which must follow upstream releases).
 let
   system = pkgs.stdenv.hostPlatform.system;
 
@@ -115,6 +116,7 @@ let
       pavucontrol
       easyeffects
       qpwgraph
+      crosspipe # Graphical audio routing tool
       gimp-with-plugins
       upscayl
       feh
@@ -174,10 +176,6 @@ let
       cava
     ];
 
-    # Exceptions: not available in stable.
-    unstable = with pkgs-unstable; [
-      crosspipe # TEMP-FIX(crosspipe-unstable): graphical audio routing tool
-    ];
   };
 in
 {
