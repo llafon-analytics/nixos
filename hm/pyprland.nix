@@ -64,7 +64,7 @@ let
     for _ in $(seq 30); do
       if ${lib.getExe' pkgs.libnotify "notify-send"} -a NixOS -i help-about \
         "Nouveautés de la configuration" \
-        "SUPER + F1 : aide-mémoire · nouveaux : F2 documentation, F3 ChatGPT"; then
+        "SUPER + ALT + 1 : aide-mémoire · nouveaux : ALT+2 documentation, ALT+3 ChatGPT"; then
         mkdir -p "$state"
         echo "${cheatsheet}" > "$seen"
         exit 0
@@ -77,8 +77,8 @@ in
 {
   # Pyprland drop-down terminal, toggled with SUPER+SHIFT+Return (hyprland.base.lua).
   # The kitty process lives on between toggles, so the shell session is kept.
-  # SUPER+F1 toggles the cheatsheet the same way, SUPER+F2 the MkDocs documentation
-  # and SUPER+F3 ChatGPT.
+  # SUPER+ALT+1 toggles the cheatsheet the same way, SUPER+ALT+2 the MkDocs documentation
+  # and SUPER+ALT+3 ChatGPT.
   home.packages = [ pkgs.pyprland ];
 
   xdg.configFile."pypr/config.toml".source = toml.generate "pyprland-config.toml" {

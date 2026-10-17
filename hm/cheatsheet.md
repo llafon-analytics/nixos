@@ -1,13 +1,13 @@
 # Aide-mémoire
 
-`SUPER + F1` ouvre/ferme cette page · `q` pour quitter · détails : `docs/`
+`SUPER + ALT + 1` ouvre/ferme cette page · `q` pour quitter · détails : `docs/`
 
 ## Nouveautés
 
 - Layout **scrolling** par workspace : `SUPER + CTRL + S`
 - **Terminal escamotable** : `SUPER + SHIFT + Entrée`
-- **Documentation NixOS** (MkDocs) en scratchpad : `SUPER + F2`
-- **ChatGPT** en scratchpad : `SUPER + F3`
+- **Documentation NixOS** (MkDocs) en scratchpad : `SUPER + ALT + 2`
+- **ChatGPT** en scratchpad : `SUPER + ALT + 3`
 - Shell : **Atuin** (`Ctrl+R`), **zoxide** (`z`, `zi`), **Lazygit** (`lg`), **Lazydocker** (desktop)
 - Nix : **nh** (`dupdate` / `lupdate`), **comma** (`, <commande>`)
 
@@ -36,14 +36,14 @@ d'Hyprland (ou après une session GameMode).
 | Raccourci | Action |
 |---|---|
 | `SUPER + SHIFT + Entrée` | terminal (session conservée) |
-| `SUPER + F1` | cet aide-mémoire |
-| `SUPER + F2` | documentation du dépôt (`mkdocs serve`, rechargement auto) |
-| `SUPER + F3` | ChatGPT (profil Chromium dédié, session conservée) |
+| `SUPER + ALT + 1` | cet aide-mémoire |
+| `SUPER + ALT + 2` | documentation du dépôt (`mkdocs serve`, rechargement auto) |
+| `SUPER + ALT + 3` | ChatGPT (profil Chromium dédié, session conservée) |
 
 Chaque raccourci affiche ou masque la fenêtre, sur le workspace actif. La
 documentation lance son serveur au premier appel (`127.0.0.1:8765`) et l'arrête
 quand la fenêtre est fermée ; une erreur de démarrage est notifiée
-(`~/.local/state/pypr-docs/mkdocs.log`). Fermer ChatGPT puis rappeler `F3` le
+(`~/.local/state/pypr-docs/mkdocs.log`). Fermer ChatGPT puis rappeler `SUPER + ALT + 3` le
 relance, connecté.
 
 ## Bureau

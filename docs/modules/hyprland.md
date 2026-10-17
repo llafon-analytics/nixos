@@ -51,7 +51,7 @@ retiler les autres fenêtres.
 
 ## Aide-mémoire
 
-`SUPER + F1` affiche ou masque l'aide-mémoire (raccourcis, commandes,
+`SUPER + ALT + 1` affiche ou masque l'aide-mémoire (raccourcis, commandes,
 nouveautés), rendu par `glow` dans un second scratchpad Pyprland (`q` pour le
 fermer). La source est `hm/cheatsheet.md` : la mettre à jour dans le même commit
 qu'un nouveau raccourci ou outil, et y résumer les changements dans
@@ -66,7 +66,7 @@ notification.
 
 ## Documentation et ChatGPT (Pyprland)
 
-`SUPER + F2` affiche ou masque la documentation du dépôt, `SUPER + F3` ChatGPT.
+`SUPER + ALT + 2` affiche ou masque la documentation du dépôt, `SUPER + ALT + 3` ChatGPT.
 Les deux sont des fenêtres Chromium en mode application (`--app`), flottantes et
 indépendantes du workspace, gérées par Pyprland (classes `chromium-docs` et
 `chromium-chatgpt`, appariement par classe car Chromium partage un processus par
@@ -83,7 +83,7 @@ profil).
   l'app macOS et ne s'évalue pas sous Linux) ; l'application web tourne donc
   dans un profil Chromium dédié (`~/.local/state/pypr-chatgpt`), qui conserve la
   session. Se connecter une fois ; masquer la fenêtre ne l'arrête pas, la
-  fermer puis rappeler `F3` la relance.
+  fermer puis rappeler `SUPER + ALT + 3` la relance.
 
 ## Validation des règles
 

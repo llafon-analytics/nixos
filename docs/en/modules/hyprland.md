@@ -50,7 +50,7 @@ windows.
 
 ## Cheatsheet
 
-`SUPER + F1` shows or hides the cheatsheet (shortcuts, commands, what's new),
+`SUPER + ALT + 1` shows or hides the cheatsheet (shortcuts, commands, what's new),
 rendered by `glow` in a second Pyprland scratchpad (`q` closes it). Its source
 is `hm/cheatsheet.md` (in French): update it in the same commit as a new
 shortcut or tool, and summarise the changes under "Nouveautés".
@@ -62,7 +62,7 @@ notification.
 
 ## Docs and ChatGPT (Pyprland)
 
-`SUPER + F2` shows or hides the repository documentation, `SUPER + F3` ChatGPT.
+`SUPER + ALT + 2` shows or hides the repository documentation, `SUPER + ALT + 3` ChatGPT.
 Both are floating, workspace-independent Chromium app windows (`--app`) managed
 by Pyprland (classes `chromium-docs` and `chromium-chatgpt`, matched by class
 because Chromium shares one process per profile).
@@ -77,7 +77,7 @@ because Chromium shares one process per profile).
 - **ChatGPT**: nixpkgs has no Linux app (the `chatgpt` attribute is the macOS
   app and does not evaluate on Linux), so the web app runs in a dedicated
   Chromium profile (`~/.local/state/pypr-chatgpt`) that keeps the session. Log
-  in once; hiding the window keeps it running, closing it and pressing `F3`
+  in once; hiding the window keeps it running, closing it and pressing `SUPER + ALT + 3`
   again relaunches it.
 
 ## Validation
