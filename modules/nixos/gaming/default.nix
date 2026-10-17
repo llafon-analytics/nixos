@@ -34,9 +34,10 @@ in
     enable = true;
     package = pkgs.millennium-steam;
     extest.enable = true; # Fixes invisible/desync cursor with Steam Input "As Mouse" on Wayland
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-    localNetworkGameTransfers.openFirewall = true;
+    # Ports stay closed on the LAN: everything goes through Tailscale.
+    remotePlay.openFirewall = false;
+    dedicatedServer.openFirewall = false;
+    localNetworkGameTransfers.openFirewall = false;
     extraPackages = with pkgs; [ flatpak ];
     gamescopeSession.enable = true;
   };

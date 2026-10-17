@@ -19,7 +19,8 @@ in
     apps.photocraft.enable = true;
   };
 
-  networking.firewall = {
+  # Services are only reachable through Tailscale (see modules/nixos/network.nix).
+  networking.firewall.interfaces.tailscale0 = {
     allowedTCPPorts = ports;
     allowedUDPPorts = ports;
   };
@@ -27,6 +28,7 @@ in
   services.openssh = {
     enable = true;
     ports = [ 2268 ];
+    openFirewall = false;
   };
 
   # Avoid large temporary and persistent writes when desktop applications crash.

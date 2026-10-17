@@ -10,7 +10,8 @@
     ../../modules/nixos/packages/laptop.nix
   ];
 
-  networking.firewall = {
+  # Services are only reachable through Tailscale (see modules/nixos/network.nix).
+  networking.firewall.interfaces.tailscale0 = {
     allowedTCPPorts = [
       80
       91
