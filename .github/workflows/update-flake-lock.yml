@@ -39,7 +39,13 @@ jobs:
 
       - name: Evaluate both hosts
         if: steps.update.outputs.pull-request-number != ''
-        run: nix flake check --no-build
+        # `nix eval` first realises Stylix's import-from-derivation (see ci.yml).
+        run: |
+          for host in desktop laptop; do
+            nix eval --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath"
+            echo
+          done
+          nix flake check --no-build
 
       - name: Summarise versions and temporary fixes
         if: steps.update.outputs.pull-request-number != ''

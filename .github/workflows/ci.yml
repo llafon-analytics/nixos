@@ -37,6 +37,15 @@ jobs:
       - uses: cachix/install-nix-action@v31
         with:
           extra_nix_config: accept-flake-config = true
+      # Stylix reads its colour scheme through import-from-derivation, which
+      # `--no-build` cannot realise on a fresh runner; `nix eval` fetches it
+      # from the binary cache first.
+      - name: Realise IFD inputs
+        run: |
+          for host in desktop laptop; do
+            nix eval --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath"
+            echo
+          done
       # Evaluates every check, including the desktop and laptop toplevels,
       # without building anything.
       - run: nix flake check --no-build --show-trace
