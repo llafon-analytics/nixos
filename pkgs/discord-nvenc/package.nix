@@ -1,3 +1,4 @@
+# TEMP-FIX(discord-nvenc-patch)
 # Official Discord client (Vencord build) patched for NVIDIA screen sharing:
 # the voice engine is forced onto NVENC/Vulkan, and Chromium's VAAPI decode is
 # disabled.
@@ -31,6 +32,7 @@ symlinkJoin {
   name = "${patched.pname or "discord"}-nvenc-${patched.version or "wrapped"}";
   paths = [ patched ];
   nativeBuildInputs = [ makeWrapper ];
+  # TEMP-FIX(discord-no-vaapi-decode): hardware video decode is disabled below.
   postBuild = ''
     for bin in ${lib.concatStringsSep " " bins}; do
       if [ -e "$out/bin/$bin" ]; then

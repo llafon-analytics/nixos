@@ -1,7 +1,7 @@
 { pkgs, pkgs-unstable, ... }:
 
 let
-  # The layer is injected into every Vulkan process; linking libstdc++ statically avoids
+  # TEMP-FIX(lsfg-vk-static-libstdcxx): the layer is injected into every Vulkan process; linking libstdc++ statically avoids
   # "GLIBCXX_3.4.35 not found" when the host process already loaded an older libstdc++.
   lsfgVkStatic = pkgs-unstable.lsfg-vk.overrideAttrs (old: {
     cmakeFlags = old.cmakeFlags ++ [

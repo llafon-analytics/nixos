@@ -3,7 +3,7 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
 
-  # caelestia-cli ships Material-You-generated hues for "catppuccin/latte", not the
+  # TEMP-FIX(caelestia-latte-palette): caelestia-cli ships Material-You-generated hues for "catppuccin/latte", not the
   # real Catppuccin palette (e.g. pink resolves to a saturated blue). Patch the shipped
   # data file with the canonical hex values already used elsewhere in this repo
   # (hm/hyprlock/latte.conf).

@@ -6,7 +6,7 @@
   home.username = "desktop";
   home.homeDirectory = "/home/desktop";
 
-  # Stylix's KDE activation needs a running Plasma session, so at boot it only
+  # TEMP-FIX(stylix-kde-activation): Stylix's KDE activation needs a running Plasma session, so at boot it only
   # fails (xcb_connect) after ~0.8s on the critical path. The autostart entry
   # still applies the theme when a Plasma session starts.
   home.activation.stylixLookAndFeel = lib.mkForce (lib.hm.dag.entryAfter [ "writeBoundary" ] "");

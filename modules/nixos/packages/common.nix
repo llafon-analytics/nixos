@@ -75,7 +75,7 @@ let
 
     internet = with pkgs; [
       ungoogled-chromium
-      # Keep Thunderbird's ONNX dependency CPU-only even when CUDA is enabled globally.
+      # TEMP-FIX(thunderbird-onnx-cpu): keep Thunderbird's ONNX dependency CPU-only even when CUDA is enabled globally.
       (wrapThunderbird (thunderbird-unwrapped.override {
         onnxruntime = onnxruntime.override { cudaSupport = false; };
       }) { })
@@ -176,7 +176,7 @@ let
 
     # Exceptions: not available in stable.
     unstable = with pkgs-unstable; [
-      crosspipe # Graphical audio routing tool
+      crosspipe # TEMP-FIX(crosspipe-unstable): graphical audio routing tool
     ];
   };
 in

@@ -5,7 +5,7 @@
   ...
 }:
 
-# TP-Link TXE70UH (Realtek RTL8852CU) USB Wi-Fi dongle, driven by the
+# TEMP-FIX(rtw89-out-of-tree): TP-Link TXE70UH (Realtek RTL8852CU) USB Wi-Fi dongle, driven by the
 # out-of-tree morrownr/rtw89 driver.
 let
   kp = config.boot.kernelPackages;

@@ -13,7 +13,7 @@
 
   programs.hyprland.enable = true;
   programs.hyprlock.enable = true;
-  # Idle handling (lock + screen off) is owned by Caelestia's own idle
+  # TEMP-FIX(hypridle-forced-off): idle handling (lock + screen off) is owned by Caelestia's own idle
   # daemon (see modules/home/caelestia.nix), not hypridle. Force it off: the
   # nixpkgs hyprlock module unconditionally sets this to true.
   services.hypridle.enable = lib.mkForce false;
