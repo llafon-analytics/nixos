@@ -1,34 +1,33 @@
 {
-  description = "A template that shows all standard flake outputs";
+  description = "NixOS configuration for the desktop and laptop hosts";
+
   nixConfig = {
-    experimental-features = [ "nix-command" "flakes"];
-    substituters = [
-      # cache mirror located in China
-      # status: https://mirror.sjtu.edu.cn/
-      # "https://mirror.sjtu.edu.cn/nix-channels/store"
-      # status: https://mirrors.ustc.edu.cn/status/
-      # "https://mirrors.ustc.edu.cn/nix-channels/store"
-
-      "https://cache.nixos.org"
-     ];
-
-    extra-substituters = [
-      # Nix community's cache server
-      "https://nix-community.cachix.org"
-    ];
+    extra-substituters = [ "https://nix-community.cachix.org" ];
     extra-trusted-public-keys = [
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
     ];
   };
 
   inputs = {
+    # Stable is the default channel. Unstable is reserved for explicit fast-moving package exceptions.
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     home-manager = {
       url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Stable is the default channel. Unstable is reserved for explicit fast-moving package exceptions.
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    stylix.url = "github:danth/stylix/release-26.05";
+
+    # Flake plumbing and tooling.
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nix-craftapps = {
       url = "github:olafkfreund/nix-craftapps";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,7 +39,6 @@
       url = "github:SteamClientHomebrew/Millennium/next?dir=packages/nix";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
-    stylix.url = "github:danth/stylix/release-26.05";
     # Caelestia builds on quickshell (git), which tracks nixos-unstable; pinning it to
     # stable 26.05 is the likeliest way to break the build.
     caelestia-shell = {
@@ -63,26 +61,16 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, ... }:
-    let
-      system = "x86_64-linux";
-      mkHost = host: nixpkgs.lib.nixosSystem {
-        specialArgs = {
-          inherit inputs;
-          pkgs-unstable = import nixpkgs-unstable {
-            inherit system;
-            config.allowUnfree = true;
-          };
-        };
-        modules = [
-          { nixpkgs.hostPlatform = system; }
-          ./hosts/${host}
-        ];
-      };
-    in {
-      nixosConfigurations = {
-        laptop = mkHost "laptop";
-        desktop = mkHost "desktop";
-      };
+  outputs =
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [ "x86_64-linux" ];
+      imports = [
+        ./flake/hosts.nix
+        ./flake/packages.nix
+        ./flake/checks.nix
+        ./flake/devshell.nix
+        ./flake/treefmt.nix
+      ];
     };
 }
