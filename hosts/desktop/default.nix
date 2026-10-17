@@ -35,9 +35,26 @@ in
     ProcessSizeMax = 0;
   };
 
-  home-manager.users.desktop = import ./home.nix;
+  networking.hostName = "desktop";
 
+  users.users.desktop = {
+    isNormalUser = true;
+    description = "desktop";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "video"
+      "docker"
+      "gamemode"
+      "input"
+    ];
+  };
+  home-manager.users.desktop = import ./home.nix;
   nix.settings.trusted-users = [ "desktop" ];
+
+  # Release the system was first installed with. Never bump it casually: it
+  # pins stateful defaults (databases, data directories), not package versions.
+  system.stateVersion = "23.05";
 
   virtualisation.docker.enable = true;
   virtualisation.docker.daemon.settings = {

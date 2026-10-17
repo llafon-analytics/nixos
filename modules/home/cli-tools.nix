@@ -29,10 +29,10 @@
   programs.lazygit.enable = true;
 
   # nh wraps nix-output-monitor, so rebuilds get nom's build tree and a package
-  # diff without installing nom separately. Both hosts share hostname "nixos", so
-  # the configuration is named explicitly; usernames match the host names.
+  # diff without installing nom separately. The hostname selects the
+  # nixosConfiguration (desktop or laptop).
   programs.nh = {
     enable = true;
-    osFlake = "${config.home.homeDirectory}/Documents/nix-configuration#${config.home.username}";
+    osFlake = "${config.home.homeDirectory}/Documents/nix-configuration";
   };
 }

@@ -49,8 +49,25 @@
 
   boot.kernel.sysctl."vm.swappiness" = 20;
 
+  networking.hostName = "laptop";
+
+  users.users.laptop = {
+    isNormalUser = true;
+    description = "laptop";
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "video"
+      "gamemode"
+      "input"
+    ];
+  };
   home-manager.users.laptop = import ./home.nix;
   nix.settings.trusted-users = [ "laptop" ];
+
+  # Release the system was first installed with. Never bump it casually: it
+  # pins stateful defaults (databases, data directories), not package versions.
+  system.stateVersion = "23.05";
 
   services.displayManager = {
     sddm.enable = true;
