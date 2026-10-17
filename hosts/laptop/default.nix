@@ -5,7 +5,6 @@
     ../../amdgpu.nix
     ../../packages/laptop.nix
     ../../tlp.nix
-    # ../../drivers/rtl8852cu.nix
     ../../drivers/rtw89.nix
   ];
 
