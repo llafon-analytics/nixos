@@ -12,7 +12,7 @@
 [[fix]]
 id = "solaar-unstable"
 title = "Solaar pris sur nixpkgs-unstable"
-status = "active"
+status = "resolved"
 hosts = ["desktop", "laptop"]
 files = ["modules/nixos/hardware/logitech.nix"]
 reason = "La suite de tests de solaar 1.1.19 (nixos-26.05) échoue dans le sandbox de build."
