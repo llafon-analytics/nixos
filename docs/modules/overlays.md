@@ -12,8 +12,3 @@ Fix temporaire `droidcam-transform-buffer`.
 ## `inputs.millennium.overlays.default`
 
 Expose `pkgs.millennium-steam`, utilisé par `programs.steam.package`.
-
-## Overlay Solaar (`modules/nixos/hardware/logitech.nix`)
-
-Remplace `solaar` par la version d'unstable (la suite de tests de la version stable échoue dans le
-sandbox). Fix temporaire `solaar-unstable`.
