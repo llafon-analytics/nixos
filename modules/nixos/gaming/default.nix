@@ -1,14 +1,5 @@
 { pkgs, pkgs-unstable, ... }:
 
-let
-  # TEMP-FIX(lsfg-vk-static-libstdcxx): the layer is injected into every Vulkan process; linking libstdc++ statically avoids
-  # "GLIBCXX_3.4.35 not found" when the host process already loaded an older libstdc++.
-  lsfgVkStatic = pkgs-unstable.lsfg-vk.overrideAttrs (old: {
-    cmakeFlags = old.cmakeFlags ++ [
-      "-DCMAKE_SHARED_LINKER_FLAGS=-static-libstdc++ -static-libgcc"
-    ];
-  });
-in
 {
   # Fast-moving gaming packages come from unstable on purpose.
   environment.systemPackages = [
@@ -25,7 +16,7 @@ in
     protonup-qt
     protontricks
     gwe
-    lsfgVkStatic
+    lsfg-vk
     lsfg-vk-ui
     steamtinkerlaunch
   ]);

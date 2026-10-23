@@ -20,7 +20,8 @@ removal_condition = "Le solaar de la branche stable construit (tests corrigés o
 removal_test = "nix build --no-link --inputs-from . nixpkgs#solaar"
 added = 2026-10-17
 review_after = 2026-11-28
-history = ["2026-10-17 : entrée créée lors de l'audit."]
+resolved = 2026-10-23
+history = ["2026-10-17 : entrée créée lors de l'audit.", "2026-10-23 : résolu, solaar 1.1.20 stable construit (removal_test au vert)."]
 
 [[fix]]
 id = "nvidia-driver-pin"
@@ -88,14 +89,15 @@ history = ["2026-10-17 : entrée créée lors de l'audit."]
 [[fix]]
 id = "lsfg-vk-static-libstdcxx"
 title = "lsfg-vk lié statiquement à libstdc++"
-status = "active"
+status = "resolved"
 hosts = ["desktop", "laptop"]
 files = ["modules/nixos/gaming/default.nix"]
 reason = "La couche Vulkan est injectée dans tous les processus ; « GLIBCXX_3.4.35 not found » quand l'hôte a déjà chargé une libstdc++ plus ancienne."
 removal_condition = "nixpkgs (ou upstream) lie lsfg-vk statiquement, ou les jeux concernés ne chargent plus de libstdc++ ancienne."
 added = 2026-10-16
 review_after = 2026-12-15
-history = ["2026-10-17 : entrée créée lors de l'audit."]
+resolved = 2026-10-23
+history = ["2026-10-17 : entrée créée lors de l'audit.", "2026-10-23 : abandonné, lsfg-vk suit unstable sans override (le bug GLIBCXX n'a pas été retesté)."]
 
 [[fix]]
 id = "droidcam-transform-buffer"
