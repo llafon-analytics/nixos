@@ -2,6 +2,11 @@
 # Official Discord client (Vencord build) patched for NVIDIA screen sharing:
 # the voice engine is forced onto NVENC/Vulkan, and Chromium's VAAPI decode is
 # disabled.
+#
+# TEMP-FIX(discord-openh264-stale-path): not enforced by this derivation. Host 1.0.161
+# hardcodes libopenh264-2.5.1-linux64.7.so while the remotely updated UI downloads and keeps
+# only 2.7.0, so H.264 streams fail to decode. Worked around by hand in
+# ~/.config/discord/discord_asset_cache/openh264 (see temp-fixes.toml).
 {
   lib,
   writeText,

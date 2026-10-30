@@ -185,3 +185,15 @@ removal_test = "[ \"$(nix eval .#nixosConfigurations.desktop.config.security.pam
 added = 2026-10-30
 review_after = 2027-01-15
 history = ["2026-10-30 : entrée créée avec l'ajout du coffre gnome-keyring."]
+
+[[fix]]
+id = "discord-openh264-stale-path"
+title = "libopenh264 2.5.1 remise à la main pour le décodage H.264 de Discord"
+status = "active"
+hosts = ["desktop"]
+files = ["pkgs/discord-nvenc/package.nix"]
+reason = "L'hôte Discord 1.0.161 force libopenh264-2.5.1-linux64.7.so alors que l'UI distante ne télécharge/garde que la 2.7.0 : « avcodec_open2 error: -1313558101 », les streams H.264 reçus ne s'affichent pas (AV1 OK). Contournement hors dépôt : la 2.5.1 officielle (ciscobinary.openh264.org) copiée dans ~/.config/discord/discord_asset_cache/openh264, dossier en chmod 555 pour empêcher le nettoyage de Discord."
+removal_condition = "Une version de Discord dont l'hôte référence la bibliothèque OpenH264 réellement téléchargée (tester un stream H.264 reçu après avoir rendu le dossier écriture et supprimé la 2.5.1)."
+added = 2026-10-30
+review_after = 2026-11-13
+history = ["2026-10-30 : entrée créée. Cause : nom de la lib codé en dur dans core.asar de l'hôte 1.0.161 (nixpkgs-unstable HEAD = 1.0.166, non vérifié). À retester après la prochaine mise à jour du lock."]
