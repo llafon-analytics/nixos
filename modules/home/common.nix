@@ -47,6 +47,9 @@
       name = "Alto";
       email = "lafon.ludovic.ll@proton.me";
     };
+    # The remote uses HTTPS: without a helper, git (and lazygit) prompt for
+    # credentials on every push, including remote branch deletion.
+    settings.credential."https://github.com".helper = "!gh auth git-credential";
   };
 
   services.syncthing.enable = true;
