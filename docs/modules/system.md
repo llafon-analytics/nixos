@@ -13,6 +13,7 @@ externes (Stylix, Home Manager, nix-index-database) et les modules suivants :
 | `network.nix` | NetworkManager, DNS Cloudflare, IPv6 désactivé, Tailscale, politique de pare-feu |
 | `home-manager.nix` | overlays, `useGlobalPkgs`, modules HM partagés (Zen, Caelestia) |
 | `desktop/` | Hyprland, hyprlock, PipeWire, polices, Stylix, portails XDG, applis (KDE Connect, Emacs, Yazi…) |
+| `desktop/keyring.nix` | gnome-keyring (Secret Service), Seahorse, `secret-tool` ; KWallet-PAM coupé sur `login` |
 | `printing.nix` | CUPS, Avahi (mDNS), IPP-over-USB |
 | `gaming/` | Steam (Millennium), Gamescope, GameMode, paquets gaming, règles udev Wolf |
 | `hardware/logitech.nix` | périphériques Logitech + Solaar |
@@ -32,3 +33,4 @@ Modules importés seulement par certains hosts :
 
 - Hostname, utilisateur et `system.stateVersion` (`23.05`) sont définis dans chaque host.
 - `nixpkgs` et `NIX_PATH` pointent automatiquement sur l'input `nixpkgs` de la flake.
+- Secret Service : gnome-keyring est l'unique fournisseur `org.freedesktop.secrets`. L'autologin SDDM ne fournit pas de mot de passe à PAM : le trousseau est déverrouillé au premier accès de la session (invite gcr), p. ex. `secret-tool store --label=<nom> service <nom> kind <type>`.

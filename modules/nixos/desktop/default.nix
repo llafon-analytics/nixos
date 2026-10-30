@@ -7,6 +7,7 @@
     ./apps.nix
     ./audio.nix
     ./fonts.nix
+    ./keyring.nix
     ./stylix.nix
     ./xdg-portal.nix
   ];

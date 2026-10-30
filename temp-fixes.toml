@@ -172,3 +172,16 @@ removal_condition = "Le cache binaire fournit ces dépendances en version CUDA, 
 added = 2026-10-17
 review_after = 2027-04-15
 history = ["2026-10-17 : créé en passant Home Manager à useGlobalPkgs (le plugin était jusque-là construit sans CUDA)."]
+
+[[fix]]
+id = "kwallet-pam-login-off"
+title = "kwallet-pam forcé à off sur le service PAM login (mkForce)"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["modules/nixos/desktop/keyring.nix"]
+reason = "Le module plasma6 active kwallet-pam sur `login` sans mkDefault ; gnome-keyring doit rester l'unique fournisseur Secret Service (org.freedesktop.secrets)."
+removal_condition = "Plasma 6 n'active plus kwallet-pam d'office, ou on abandonne gnome-keyring pour KWallet."
+removal_test = "[ \"$(nix eval .#nixosConfigurations.desktop.config.security.pam.services.login.kwallet.enable 2>/dev/null)\" = false ]"
+added = 2026-10-30
+review_after = 2027-01-15
+history = ["2026-10-30 : entrée créée avec l'ajout du coffre gnome-keyring."]

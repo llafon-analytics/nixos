@@ -13,6 +13,7 @@ modules (Stylix, Home Manager, nix-index-database) and the following modules:
 | `network.nix` | NetworkManager, Cloudflare DNS, IPv6 disabled, Tailscale, firewall policy |
 | `home-manager.nix` | overlays, `useGlobalPkgs`, shared HM modules (Zen, Caelestia) |
 | `desktop/` | Hyprland, hyprlock, PipeWire, fonts, Stylix, XDG portals, apps (KDE Connect, Emacs, Yazi…) |
+| `desktop/keyring.nix` | gnome-keyring (Secret Service), Seahorse, `secret-tool`; KWallet-PAM disabled on `login` |
 | `printing.nix` | CUPS, Avahi (mDNS), IPP-over-USB |
 | `gaming/` | Steam (Millennium), Gamescope, GameMode, gaming packages, Wolf udev rules |
 | `hardware/logitech.nix` | Logitech devices + Solaar |
@@ -32,3 +33,4 @@ Modules imported by some hosts only:
 
 - Hostname, user and `system.stateVersion` (`23.05`) are set in each host.
 - The `nixpkgs` registry entry and `NIX_PATH` point at the flake's `nixpkgs` input automatically.
+- Secret Service: gnome-keyring is the only `org.freedesktop.secrets` provider. SDDM autologin gives PAM no password, so the keyring is unlocked on first access in each session (gcr prompt), e.g. `secret-tool store --label=<name> service <name> kind <type>`.
