@@ -7,7 +7,8 @@ Packages are sorted into named groups, concatenated into `environment.systemPack
 `archives`, `virtualisation`, `fun`. See [Package groups](../reference/package-groups.md).
 
 Discord and Discord Canary (Vencord) come from `pkgs-unstable` and are patched by
-`pkgs/discord-nvenc` (see [GPU](gpu.md)).
+`pkgs/discord-nvenc` (see [GPU](gpu.md)). Vencord is temporarily pinned to a version newer than
+nixpkgs' when Discord's web client breaks the older one (temporary fix `vencord-rspack`).
 
 ## Gaming (`modules/nixos/gaming/default.nix`)
 
