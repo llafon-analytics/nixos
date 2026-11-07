@@ -25,7 +25,7 @@ sur `pkgs-unstable` (Wine, Proton, MangoHud, Heroic, PrismLauncher, lsfg-vk…).
 | Paquet | Rôle |
 |---|---|
 | `discord-nvenc` | Discord patché pour l'encodage NVENC |
-| `opennow` | client GeForce NOW (AppImage) |
+| `opennow` | client GeForce NOW (AppImage Qt) |
 | `rtw89`, `rtw89-firmware` | pilote Wi-Fi hors arbre et firmware |
 | `temp-fixes` | CLI du registre des fix temporaires |
 | `mkdocs-env` | environnement Python de la documentation |
