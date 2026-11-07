@@ -25,7 +25,7 @@ Steam (Millennium package), Gamescope, GameMode, Lutris and a list of tools deli
 | Package | Role |
 |---|---|
 | `discord-nvenc` | Discord patched for NVENC encoding |
-| `opennow` | GeForce NOW client (AppImage) |
+| `opennow` | GeForce NOW client (Qt AppImage) |
 | `rtw89`, `rtw89-firmware` | out-of-tree Wi-Fi driver and firmware |
 | `temp-fixes` | CLI for the temporary-fix registry |
 | `mkdocs-env` | Python environment for the documentation |
