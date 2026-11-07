@@ -197,3 +197,17 @@ removal_condition = "Une version de Discord dont l'hôte référence la biblioth
 added = 2026-10-30
 review_after = 2026-11-13
 history = ["2026-10-30 : entrée créée. Cause : nom de la lib codé en dur dans core.asar de l'hôte 1.0.161 (nixpkgs-unstable HEAD = 1.0.166, non vérifié). À retester après la prochaine mise à jour du lock."]
+
+[[fix]]
+id = "vencord-rspack"
+title = "Vencord forcé en 1.15.16 (client web Discord passé à rspack)"
+status = "active"
+hosts = ["desktop", "laptop"]
+files = ["modules/nixos/packages/common.nix"]
+reason = "Le 2026-11-06, le client web de Discord (téléchargé à chaque lancement) est passé à rspack ; Vencord 1.15.11 (nixpkgs-unstable verrouillé, 1.15.13 sur master) casse l'UI au démarrage : « Uncaught TypeError: i.A is not a constructor ». Corrigé en amont dans Vencord v1.15.16. Le patch fix-deps de nixpkgs est retiré car l'amont fixe déjà @types/react 19."
+removal_condition = "nixpkgs-unstable verrouillé fournit vencord >= 1.15.16 (supprimer alors l'override et le `inherit vencord;` des deux paquets Discord)."
+removal_test = "v=$(nix eval --raw --inputs-from . nixpkgs-unstable#vencord.version) && [ \"$(printf '%s\\n' 1.15.16 \"$v\" | sort -V | head -n1)\" = 1.15.16 ]"
+upstream = "https://github.com/Vendicated/Vencord/releases/tag/v1.15.16"
+added = 2026-11-06
+review_after = 2026-11-10
+history = ["2026-11-06 : créé après la casse de Discord (bundle web.72656029554c0370.js). Revue rapprochée demandée par l'utilisateur : à retirer dès que nixpkgs suit."]

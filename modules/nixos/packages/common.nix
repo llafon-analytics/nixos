@@ -12,8 +12,34 @@
 let
   system = pkgs.stdenv.hostPlatform.system;
 
+  # TEMP-FIX(vencord-rspack): Discord's web client moved to rspack on 2026-11-06 and
+  # Vencord < 1.15.16 breaks it ("i.A is not a constructor"); nixpkgs still ships 1.15.13.
+  # Upstream now pins @types/react 19 itself, so nixpkgs' fix-deps patch no longer applies.
+  vencord = pkgs-unstable.vencord.overrideAttrs (
+    finalAttrs: _: {
+      version = "1.15.16";
+      src = pkgs.fetchFromGitHub {
+        owner = "Vendicated";
+        repo = "Vencord";
+        tag = "v${finalAttrs.version}";
+        hash = "sha256-aUJubLJpyLAZWiOezqFxPY6oVPgWVPQpajFqrJvrO9U=";
+      };
+      patches = [ ];
+      postPatch = "";
+      pnpmDeps = pkgs-unstable.fetchPnpmDeps {
+        inherit (finalAttrs) pname version src;
+        pnpm = pkgs-unstable.pnpm_11;
+        fetcherVersion = 4;
+        hash = "sha256-HS8uZNepvDefjrsG3buVLFCVv7sHvazcwdpcT3EQ/78=";
+      };
+    }
+  );
+
   discordNvenc = pkgs.callPackage ../../../pkgs/discord-nvenc/package.nix {
-    discord = pkgs-unstable.discord.override { withVencord = true; };
+    discord = pkgs-unstable.discord.override {
+      withVencord = true;
+      inherit vencord;
+    };
     installDir = "Discord";
     bins = [
       "Discord"
@@ -21,7 +47,10 @@ let
     ];
   };
   discordCanaryNvenc = pkgs.callPackage ../../../pkgs/discord-nvenc/package.nix {
-    discord = pkgs-unstable.discord-canary.override { withVencord = true; };
+    discord = pkgs-unstable.discord-canary.override {
+      withVencord = true;
+      inherit vencord;
+    };
     installDir = "DiscordCanary";
     bins = [
       "DiscordCanary"
